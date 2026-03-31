@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中原公司河南区域项目地图</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+  
+  #header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  #header h1 { font-size: 16px; font-weight: 600; }
+  #header .stats { font-size: 13px; opacity: 0.85; }
+  
+  #container { position: fixed; top: 44px; left: 0; right: 0; bottom: 0; }
+  
+  #search-box {
+    position: absolute;
+    top: 10px; left: 10px;
+    z-index: 888;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    padding: 10px;
+    width: 280px;
+  }
+  #search-box input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+  }
+  #search-box input:focus { border-color: #1a73e8; }
+  #search-results {
+    margin-top: 6px;
+    max-height: 260px;
+    overflow-y: auto;
+    display: none;
+  }
+  .sri {
+    padding: 7px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #333;
+  }
+  .sri:hover { background: #f0f4ff; }
+  .sri .city-tag {
+    background: #e8f0fe;
+    color: #1a73e8;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 10px;
+    margin-right: 5px;
+  }
+  
+  #info-panel {
+    position: absolute;
+    top: 10px; right: 10px;
+    z-index: 888;
+    width: 220px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    overflow: hidden;
+    max-height: calc(100% - 20px);
+    display: flex;
+    flex-direction: column;
+  }
+  #info-panel .ph {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 8px 12px;
+    font-weight: 600;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  #info-panel .ph .close-btn { cursor: pointer; font-size: 16px; opacity: 0.7; }
+  #info-panel .ph .close-btn:hover { opacity: 1; }
+  #info-panel .pb { padding: 6px 12px; overflow-y: auto; flex: 1; }
+  .csi {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .csi:last-child { border-bottom: none; }
+  .csi:hover, .csi.active { color: #1a73e8; font-weight: 600; }
+  .csi .cnt {
+    background: #e8f0fe;
+    color: #1a73e8;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+  #proj-list {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 888;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    width: 640px;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+  }
+  #proj-list.show { display: block; }
+  #proj-list .ph {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+  }
+  #proj-list .ph .cnt { font-size: 11px; opacity: 0.8; }
+  #proj-list .body { padding: 6px; }
+  .pi {
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #333;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .pi:last-child { border-bottom: none; }
+  .pi:hover { background: #f0f4ff; }
+  .pi .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; margin-right: 8px; flex-shrink: 0; }
+  .pi .info { flex: 1; }
+  .pi .name { font-weight: 600; margin-bottom: 2px; }
+  .pi .meta { font-size: 11px; color: #888; }
+  
+  #legend {
+    position: absolute;
+    bottom: 15px; left: 10px;
+    background: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 11px;
+    z-index: 887;
+  }
+  .dot-red { width: 8px; height: 8px; background: #ea4335; border-radius: 50%; display: inline-block; margin-right: 3px; }
+  .dot-blue { width: 8px; height: 8px; background: #1a73e8; border-radius: 50%; display: inline-block; margin-right: 3px; }
+  
+  #loading {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px 36px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 9999;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    display: none;
+  }
+  #loading.show { display: block; }
+  .spinner {
+    border: 3px solid #f0f0f0;
+    border-top: 3px solid #1a73e8;
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px;
+  }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>🏗️ 中原公司河南区域项目地图</h1>
+  <div class="stats">共 <span id="tc" style="font-weight:bold">28</span> 个项目 · <span id="cc" style="font-weight:bold">9</span> 个地级市</div>
+</div>
+
+<div id="container">
+  <div id="map" style="width:100%;height:100%;"></div>
+</div>
+
+<div id="search-box">
+  <input type="text" id="si" placeholder="🔍 搜索项目名称..." autocomplete="off">
+  <div id="sr"></div>
+</div>
+
+<div id="info-panel">
+  <div class="ph">
+    <span>📊 各地级市项目数</span>
+    <span class="close-btn" onclick="document.getElementById('info-panel').style.display='none'">×</span>
+  </div>
+  <div class="pb" id="cs"></div>
+</div>
+
+<div id="proj-list">
+  <div class="ph">
+    <span id="lt">项目列表</span>
+    <span class="cnt" id="lc"></span>
+  </div>
+  <div class="body" id="pis"></div>
+</div>
+
+<div id="legend">
+  <span class="dot-red"></span>停缓建
+  <span style="margin-left:10px" class="dot-blue"></span>在建
+</div>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <div id="lt2">正在加载高德地图...</div>
+</div>
+
+<script src="https://webapi.amap.com/maps?v=2.0&key=edd630581985546a3f8da8bc4fe9011d"></script>
+<script>
+document.getElementById('loading').classList.add('show');
+
+const projects = [
+  {id:1, city:"郑州市", name:"郑东新区科学谷数字小镇建设项目（一期）EPC总承包", status:"在建", lng:113.618, lat:34.756},
+  {id:2, city:"郑州市", name:"郑州国际文化交流中心项目", status:"在建", lng:113.625, lat:34.746},
+  {id:3, city:"郑州市", name:"郑东新区天府路以东科学大道地道及两侧道路工程施工（二次）3标段", status:"在建", lng:113.630, lat:34.740},
+  {id:4, city:"济源市", name:"紫光苑项目", status:"在建", lng:112.590, lat:35.067},
+  {id:5, city:"郑州市", name:"中原数字经济科创园", status:"在建", lng:113.605, lat:34.758},
+  {id:6, city:"郑州市", name:"松苑项目施工总承包工程", status:"在建", lng:113.610, lat:34.760},
+  {id:7, city:"郑州市", name:"河南大学图书综合楼施工总承包项目", status:"在建", lng:113.620, lat:34.752},
+  {id:8, city:"郑州市", name:"创智科技中心项目施工", status:"在建", lng:113.612, lat:34.762},
+  {id:9, city:"平顶山市", name:"平顶山市传染病医院扩建项目", status:"在建", lng:113.192, lat:33.766},
+  {id:10, city:"郑州市", name:"二七区侯寨新镇区安置区NG01-01地块项目施工总承包", status:"在建", lng:113.640, lat:34.730},
+  {id:11, city:"新乡市", name:"新乡市红旗区大学城片区城市更新项目一期启动区项目（EPC）", status:"在建", lng:113.926, lat:35.303},
+  {id:12, city:"郑州市", name:"郑州期货产业园（一期）北区、南区工程施工", status:"在建", lng:113.608, lat:34.750},
+  {id:13, city:"郑州市", name:"郑州航空港区豫创建设发展有限公司「两院一中心」二期西侧院区项目施工总承包", status:"在建", lng:113.660, lat:34.720},
+  {id:14, city:"郑州市", name:"郑州市惠济区S3-2地块建设项目工程总承包", status:"在建", lng:113.600, lat:34.780},
+  {id:15, city:"郑州市", name:"空铁城·国际总部中心建设项目EPC工程总承包项目", status:"在建", lng:113.670, lat:34.715},
+  {id:16, city:"郑州市", name:"聚金揽璟玫瑰园项目", status:"停缓建", lng:113.615, lat:34.748},
+  {id:17, city:"新乡市", name:"河南师范大学博达园学生宿舍建设项目", status:"在建", lng:113.918, lat:35.310},
+  {id:18, city:"商丘市", name:"中央储备粮商丘直属库有限公司夏邑分公司仓储项目施工总承包", status:"在建", lng:115.656, lat:34.438},
+  {id:19, city:"郑州市", name:"中国烟草总公司郑州烟草研究院科研基础设施升级改造项目", status:"在建", lng:113.622, lat:34.755},
+  {id:20, city:"郑州市", name:"智学产业园施工", status:"停缓建", lng:113.628, lat:34.745},
+  {id:21, city:"许昌市", name:"中原电气谷智能电气城项目（一期）工程总承包（EPC）三标段", status:"在建", lng:113.822, lat:34.036},
+  {id:22, city:"郑州市", name:"智能感知与数字装备产业基地项目", status:"在建", lng:113.650, lat:34.738},
+  {id:23, city:"洛阳市", name:"洛阳高新区棚户区改造孙旗屯三期项目", status:"在建", lng:112.454, lat:34.620},
+  {id:24, city:"郑州市", name:"河南科技大学菁院15号16号宿舍楼项目", status:"在建", lng:113.595, lat:34.760},
+  {id:25, city:"安阳市", name:"G341胶海线林州市区至桃园段新建工程施工第一标段", status:"在建", lng:114.393, lat:36.097},
+  {id:26, city:"郑州市", name:"郑州海昌海洋公园项目（二期）", status:"在建", lng:113.680, lat:34.710},
+  {id:27, city:"洛阳市", name:"洛宁科创产业园建设项目（EPC）", status:"在建", lng:112.480, lat:34.580},
+  {id:28, city:"鹤壁市", name:"鹤壁工程技术学院（二期）", status:"在建", lng:114.295, lat:35.748},
+];
+
+const cityStats = {};
+projects.forEach(p => { cityStats[p.city] = (cityStats[p.city]||0)+1; });
+
+const cityView = {
+  "郑州市": [113.625, 34.746, 10],
+  "济源市": [112.590, 35.067, 10],
+  "平顶山市": [113.192, 33.766, 10],
+  "新乡市": [113.926, 35.303, 10],
+  "许昌市": [113.822, 34.036, 10],
+  "洛阳市": [112.454, 34.620, 10],
+  "安阳市": [114.393, 36.097, 10],
+  "商丘市": [115.656, 34.438, 10],
+  "鹤壁市": [114.295, 35.748, 10],
+};
+
+let map, markers = [];
+let infoWindow;
+
+window.onload = function() {
+  document.getElementById('loading').classList.add('show');
+  document.getElementById('lt2').textContent = '正在加载高德地图...';
+  
+  map = new AMap.Map('map', {
+    zoom: 7,
+    center: [113.0, 34.5],
+    viewMode: '2D',
+    mapStyle: 'amap://styles/whitesmoke',
+  });
+
+  AMap.plugin('AMap.ToolBar', () => { map.addControl(new AMap.ToolBar({ position: 'RB' })); });
+
+  infoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -20) });
+
+  map.on('complete', () => {
+    document.getElementById('loading').classList.remove('show');
+    renderMarkers();
+    buildCityStats();
+    document.getElementById('info-panel').style.display = 'block';
+  });
+};
+
+function renderMarkers() {
+  markers.forEach(m => m.setMap(null));
+  markers = [];
+  
+  projects.forEach(p => {
+    const color = p.status === '停缓建' ? '#ea4335' : '#1a73e8';
+    const m = new AMap.Marker({
+      position: [p.lng, p.lat],
+      title: p.name,
+      content: `<div style="width:12px;height:12px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.3);cursor:pointer;"></div>`,
+      offset: new AMap.Pixel(-6, -6),
+    });
+    m.on('click', () => {
+      infoWindow.setContent(
+        `<div style="padding:8px 12px;font-size:13px;line-height:1.6;">
+          <div style="font-weight:600;font-size:14px;margin-bottom:4px;">${p.name}</div>
+          <div style="color:#666;">📍 ${p.city}</div>
+          <div style="color:${color};font-weight:600;margin-top:4px;">● ${p.status}</div>
+        </div>`
+      );
+      infoWindow.open(map, [p.lng, p.lat]);
+    });
+    m.setMap(map);
+    markers.push(m);
+  });
+}
+
+function buildCityStats() {
+  const el = document.getElementById('cs');
+  let html = '';
+  Object.entries(cityStats).sort((a,b)=>b[1]-a[1]).forEach(([city, count]) => {
+    html += `<div class="csi" onclick="focusCity('${city}')"><span>${city}</span><span class="cnt">${count}</span></div>`;
+  });
+  el.innerHTML = html;
+}
+
+function focusCity(city) {
+  const v = cityView[city];
+  if (!v) return;
+  map.setZoomAndCenter(v[2], new AMap.LngLat(v[0], v[1]));
+  const list = projects.filter(p => p.city === city);
+  showList(city + ' (' + list.length + '个项目)', list);
+}
+
+function showList(title, list) {
+  document.getElementById('lt').textContent = title;
+  document.getElementById('lc').textContent = list.length + '个项目';
+  document.getElementById('pis').innerHTML = list.map(p => {
+    const color = p.status === '停缓建' ? '#ea4335' : '#1a73e8';
+    return `<div class="pi" onclick="flyTo(${p.id})">
+      <div class="dot" style="background:${color};"></div>
+      <div class="info">
+        <div class="name">${p.name}</div>
+        <div class="meta">${p.city} · ${p.status}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('proj-list').classList.add('show');
+}
+
+function flyTo(id) {
+  const p = projects.find(pr => pr.id === id);
+  if (!p) return;
+  map.setZoomAndCenter(14, new AMap.LngLat(p.lng, p.lat));
+  infoWindow.setContent(
+    `<div style="padding:8px 12px;font-size:13px;line-height:1.6;">
+      <div style="font-weight:600;font-size:14px;margin-bottom:4px;">${p.name}</div>
+      <div style="color:#666;">📍 ${p.city}</div>
+      <div style="color:${p.status==='停缓建'?'#ea4335':'#1a73e8'};font-weight:600;margin-top:4px;">● ${p.status}</div>
+    </div>`
+  );
+  infoWindow.open(map, [p.lng, p.lat]);
+  document.getElementById('proj-list').classList.remove('show');
+}
+
+document.getElementById('si').addEventListener('input', function(e) {
+  const q = e.target.value.trim();
+  const sr = document.getElementById('sr');
+  if (q.length < 1) { sr.style.display='none'; return; }
+  const m = projects.filter(p => p.name.includes(q) || p.city.includes(q));
+  sr.innerHTML = m.length === 0
+    ? '<div style="color:#999;font-size:12px;padding:6px 8px;">未找到</div>'
+    : m.map(p => `<div class="sri" onclick="flyTo(${p.id});sr.style.display='none';si.value='';">
+        <span class="city-tag">${p.city}</span>${p.name}</div>`).join('');
+  sr.style.display = 'block';
+});
+document.getElementById('si').addEventListener('blur', () => setTimeout(()=>sr.style.display='none', 200));
+</script>
+</body>
+</html>
