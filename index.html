@@ -2,255 +2,113 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>中原公司河南区域在建项目地图</title>
+<title>坐标解析测试</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;}
-  #header{background:linear-gradient(135deg,#1a1a2e,#16213e);color:white;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:999;box-shadow:0 2px 10px rgba(0,0,0,.3);}
-  #header h1{font-size:16px;font-weight:600;}
-  #header .stats{font-size:13px;opacity:.85;}
-  #container{position:fixed;top:44px;left:0;right:0;bottom:0;}
-  #search-box{position:absolute;top:10px;left:10px;z-index:888;background:white;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);padding:10px;width:280px;}
-  #search-box input{width:100%;padding:8px 12px;border:2px solid #e0e0e0;border-radius:6px;font-size:13px;outline:none;}
-  #search-box input:focus{border-color:#1a73e8;}
-  #search-results{margin-top:6px;max-height:260px;overflow-y:auto;display:none;}
-  .sri{padding:7px 10px;cursor:pointer;border-radius:4px;font-size:12px;color:#333;}
-  .sri:hover{background:#f0f4ff;}
-  .sri .city-tag{background:#e8f0fe;color:#1a73e8;padding:1px 5px;border-radius:3px;font-size:10px;margin-right:5px;}
-  #info-panel{position:absolute;top:10px;right:10px;z-index:888;width:220px;background:white;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);overflow:hidden;max-height:calc(100% - 20px);display:flex;flex-direction:column;}
-  #info-panel .ph{background:linear-gradient(135deg,#1a1a2e,#16213e);color:white;padding:8px 12px;font-weight:600;font-size:12px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
-  #info-panel .ph .close-btn{cursor:pointer;font-size:16px;opacity:.7;}
-  #info-panel .ph .close-btn:hover{opacity:1;}
-  #info-panel .pb{padding:6px 12px;overflow-y:auto;flex:1;}
-  .csi{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f0f0f0;cursor:pointer;font-size:12px;}
-  .csi:last-child{border-bottom:none;}
-  .csi:hover,.csi.active{color:#1a73e8;font-weight:600;}
-  .csi .cnt{background:#e8f0fe;color:#1a73e8;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:600;}
-  #proj-list{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:888;background:white;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,.2);width:640px;max-height:300px;overflow-y:auto;display:none;}
-  #proj-list.show{display:block;}
-  #proj-list .ph{background:linear-gradient(135deg,#1a1a2e,#16213e);color:white;padding:8px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;}
-  #proj-list .ph .cnt{font-size:11px;opacity:.8;}
-  #proj-list .body{padding:6px;}
-  .pi{display:flex;align-items:flex-start;padding:8px 10px;border-radius:5px;cursor:pointer;font-size:12px;color:#333;border-bottom:1px solid #f5f5f5;}
-  .pi:last-child{border-bottom:none;}
-  .pi:hover{background:#f0f4ff;}
-  .pi .dot{width:8px;height:8px;border-radius:50%;margin-top:4px;margin-right:8px;flex-shrink:0;}
-  .pi .info{flex:1;}
-  .pi .name{font-weight:600;margin-bottom:2px;}
-  .pi .meta{font-size:11px;color:#888;}
-  #legend{position:absolute;bottom:15px;left:10px;background:white;padding:6px 12px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.1);font-size:11px;z-index:887;}
-  .dot-red{width:8px;height:8px;background:#ea4335;border-radius:50%;display:inline-block;margin-right:3px;}
-  .dot-blue{width:8px;height:8px;background:#1a73e8;border-radius:50%;display:inline-block;margin-right:3px;}
-  #loading{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px 36px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.15);z-index:9999;text-align:center;font-size:14px;color:#333;display:none;}
-  #loading.show{display:block;}
-  .spinner{border:3px solid #f0f0f0;border-top:3px solid #1a73e8;border-radius:50%;width:28px;height:28px;animation:spin 1s linear infinite;margin:0 auto 10px;}
-  @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-  .popup-wrap{min-width:300px;}
-  .popup-title{padding:10px 12px 6px;font-size:14px;font-weight:700;color:#1a1a2e;border-bottom:2px solid #1a73e8;}
-  .popup-table{width:100%;border-collapse:collapse;font-size:13px;}
-  .popup-table th{background:#f5f5f5;text-align:left;padding:5px 10px;font-weight:600;color:#333;border-bottom:1px solid #e0e0e0;white-space:nowrap;}
-  .popup-table td{padding:5px 10px;color:#555;border-bottom:1px solid #f0f0f0;vertical-align:top;}
-  .popup-table tr:last-child td{border-bottom:none;}
-  .popup-table td:first-child{color:#888;width:72px;white-space:nowrap;}
-  .popup-footer{padding:6px 10px;background:#f9f9f9;font-size:11px;color:#999;text-align:center;}
-  #progress-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:#e0e0e0;z-index:9999;display:none;}
-  #progress-bar.show{display:block;}
-  #progress-bar .bar{height:100%;background:#1a73e8;transition:width .3s;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;padding:20px;background:#f5f5f5;}
+  h2{color:#1a1a2e;}
+  .test-item{margin:8px 0;display:flex;align-items:center;gap:10px;}
+  .test-item input{flex:1;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:13px;}
+  button{padding:8px 16px;background:#1a73e8;color:white;border:none;border-radius:6px;cursor:pointer;}
+  button:hover{background:#1557b0;}
+  .result{margin-top:4px;padding:8px;background:#e8f0fe;border-radius:4px;font-size:13px;color:#1a73e8;display:none;}
+  .all-btn{margin:20px 0;padding:12px 24px;background:#ea4335;color:white;border:none;border-radius:6px;cursor:pointer;font-size:14px;}
+  .log{background:#fff;padding:15px;border-radius:8px;margin-top:20px;max-height:400px;overflow-y:auto;font-size:12px;color:#333;white-space:pre-wrap;border:1px solid #e0e0e0;}
+  .ok{color:#1a73e8;font-weight:600;}
+  .fail{color:#ea4335;}
 </style>
 </head>
 <body>
+<h2>🗺️ 高德地理编码测试（K列详细地址）</h2>
+<p>输入详细地址，点击"解析"查看返回的经纬度坐标</p>
 
-<div id="header">
-  <h1>🏗️ 中原公司河南区域在建项目地图</h1>
-  <div class="stats">共 <span id="tc" style="font-weight:bold">28</span> 个项目 · <span id="cc" style="font-weight:bold">9</span> 个地级市</div>
-</div>
-<div id="container"><div id="map" style="width:100%;height:100%;"></div></div>
-
-<div id="search-box">
-  <input type="text" id="si" placeholder="🔍 搜索项目名称..." autocomplete="off">
-  <div id="sr"></div>
-</div>
-
-<div id="info-panel">
-  <div class="ph">
-    <span>📊 各地级市项目数</span>
-    <span class="close-btn" onclick="document.getElementById('info-panel').style.display='none'">×</span>
-  </div>
-  <div class="pb" id="cs"></div>
-</div>
-
-<div id="proj-list">
-  <div class="ph"><span id="lt">项目列表</span><span class="cnt" id="lc"></span></div>
-  <div class="body" id="pis"></div>
-</div>
-
-<div id="legend"><span class="dot-red"></span>停缓建<span style="margin-left:10px" class="dot-blue"></span>在建</div>
-<div id="loading"><div class="spinner"></div><div id="lt2">正在加载...</div></div>
-<div id="progress-bar"><div class="bar" id="progress" style="width:0%"></div></div>
+<div id="tests"></div>
+<button class="all-btn" onclick="runAll()">▶ 批量解析全部28个地址</button>
+<div class="log" id="log">等待开始...</div>
 
 <script src="https://webapi.amap.com/maps?v=2.0&key=edd630581985546a3f8da8bc4fe9011d&plugin=AMap.Geocoder"></script>
 <script>
-const projects = [
-  {id:1,city:"郑州市",name:"郑东新区科学谷数字小镇建设项目（一期）EPC总承包",address:"郑州市郑东新区云溪北路以南，前程路以东、雁鸣路以西，云溪以北",builder:"河南数字小镇开发建设有限公司",area:"47.14",amount:"25.0",pm:"陈轩",stage:"装饰装修",status:"在建"},
-  {id:2,city:"郑州市",name:"郑州国际文化交流中心项目",address:"郑州市郑东新区龙湖北岸，龙湖内环北路与龙源西二街交叉口",builder:"郑州市郑汴文创产业发展有限公司",area:"31.25",amount:"23.0",pm:"蔡晨",stage:"装饰装修",status:"在建"},
-  {id:3,city:"郑州市",name:"郑东新区天府路以东科学大道地道及两侧道路工程施工（二次）3标段",address:"郑州市郑东新区白沙组团科学大道，西起前程路东至龙阳路",builder:"河南东龙市政工程有限公司",area:"—",amount:"2.8",pm:"陈豫川",stage:"主体结构",status:"在建"},
-  {id:4,city:"济源市",name:"紫光苑项目",address:"济源市东二环东、苇泉河南、规划南环路北",builder:"济源市汇济置业有限公司",area:"40.2",amount:"23.0",pm:"张大鹏",stage:"装饰装修",status:"在建"},
-  {id:5,city:"郑州市",name:"中原数字经济科创园",address:"河南自贸试验区郑州片区白佛南路与潭南街交叉口东北侧",builder:"郑州投控科技产业园区发展有限公司",area:"17.84",amount:"8.22",pm:"朱贺龙",stage:"装饰装修",status:"在建"},
-  {id:6,city:"郑州市",name:"松苑项目施工总承包工程",address:"郑州市郑东新区九如东路东、如意河东二街南",builder:"郑州建瓴置业有限公司",area:"19.8",amount:"8.77",pm:"王旭",stage:"装饰装修",status:"在建"},
-  {id:7,city:"郑州市",name:"河南大学图书综合楼施工总承包项目",address:"郑州市郑东新区河南大学龙子湖校区，明理路379号",builder:"河南大学",area:"6.69",amount:"2.7",pm:"宋明远",stage:"装饰装修",status:"在建"},
-  {id:8,city:"郑州市",name:"创智科技中心项目施工",address:"郑州市郑东新区心怡路以东，康宁街以南",builder:"郑州新发展科创实业有限公司",area:"16.5",amount:"6.9",pm:"李存建",stage:"地基与基础",status:"在建"},
-  {id:9,city:"平顶山市",name:"平顶山市传染病医院扩建项目",address:"平顶山市平宝大道与西环路交叉口西南角",builder:"平顶山市第三人民医院",area:"9.04",amount:"2.79",pm:"郑育祥",stage:"装饰装修",status:"在建"},
-  {id:10,city:"郑州市",name:"二七区侯寨新镇区安置区NG01-01地块项目施工总承包",address:"郑州市二七区马寨镇工业路8号",builder:"郑州中鼎置业有限公司",area:"8.17",amount:"2.09",pm:"齐康",stage:"装饰装修",status:"在建"},
-  {id:11,city:"新乡市",name:"新乡市红旗区大学城片区城市更新项目一期启动区项目（EPC）",address:"新乡市红旗区东至鸿源街，西至规划路，北至纺织路，南至住宅项目A区用地北边界",builder:"新乡新投城鸿城市更新建设有限公司",area:"32.06",amount:"7.5",pm:"白珂",stage:"装饰装修",status:"在建"},
-  {id:12,city:"郑州市",name:"郑州期货产业园（一期）北区、南区工程施工",address:"郑州市郑东新区龙湖中环北路南、龙源路东",builder:"河南晟龙产业园区运营管理有限公司",area:"22.09",amount:"6.82",pm:"吕志朋",stage:"装饰装修",status:"在建"},
-  {id:13,city:"郑州市",name:"郑州航空港区豫创建设发展有限公司「两院一中心」二期西侧院区项目施工总承包",address:"郑州航空港区黄海路以南、蓝莲路以北、生物科技四街以西、生物科技一街以东",builder:"郑州航空港区豫创建设发展有限公司",area:"14.51",amount:"8.2",pm:"尚刘威",stage:"主体结构",status:"在建"},
-  {id:14,city:"郑州市",name:"郑州市惠济区S3-2地块建设项目工程总承包",address:"郑州市惠济区",builder:"郑州惠晟置业有限公司",area:"—",amount:"—",pm:"—",stage:"主体施工阶段",status:"在建"},
-  {id:15,city:"郑州市",name:"空铁城·国际总部中心建设项目EPC工程总承包项目",address:"郑州航空港经济综合实验区豫州大道以西、皛店路以南",builder:"河南铁建投空铁城建设发展有限公司",area:"—",amount:"—",pm:"李志斌",stage:"地基基础",status:"在建"},
-  {id:16,city:"郑州市",name:"聚金揽璟玫瑰园项目",address:"郑州市郑东新区",builder:"郑州金天居置业有限公司",area:"—",amount:"—",pm:"—",stage:"装饰装修",status:"停缓建"},
-  {id:17,city:"新乡市",name:"河南师范大学博达园学生宿舍建设项目",address:"新乡市平原城乡一体化示范区云梦山路以东、长江大道以北、黄河路以南",builder:"河南师范大学",area:"—",amount:"—",pm:"王振",stage:"地基基础",status:"在建"},
-  {id:18,city:"商丘市",name:"中央储备粮商丘直属库有限公司夏邑分公司仓储项目施工总承包",address:"商丘市夏邑县",builder:"中央储备粮商丘直属库有限公司",area:"—",amount:"—",pm:"李玉龙",stage:"地基基础",status:"在建"},
-  {id:19,city:"郑州市",name:"中国烟草总公司郑州烟草研究院科研基础设施升级改造项目",address:"郑州高新开发区枫杨街2号",builder:"中国烟草总公司郑州烟草研究院",area:"—",amount:"—",pm:"黄晓兵",stage:"—",status:"在建"},
-  {id:20,city:"郑州市",name:"智学产业园施工",address:"郑州市郑东新区金水东路南，后贾西街东",builder:"河南智学教育科技有限公司",area:"—",amount:"—",pm:"李伟斌",stage:"—",status:"停缓建"},
-  {id:21,city:"许昌市",name:"中原电气谷智能电气城项目（一期）工程总承包（EPC）三标段",address:"许昌市建安区北外环与魏武路交叉口",builder:"中原电气谷科技发展有限公司",area:"—",amount:"—",pm:"杨涛",stage:"地基基础",status:"在建"},
-  {id:22,city:"郑州市",name:"智能感知与数字装备产业基地项目",address:"郑州高新区青梅街南、金柏路西",builder:"郑州智能传感谷有限公司",area:"—",amount:"—",pm:"—",stage:"地基基础",status:"在建"},
-  {id:23,city:"洛阳市",name:"洛阳高新区棚户区改造孙旗屯三期项目",address:"洛阳市高新区孙旗屯",builder:"洛阳信德置业有限公司",area:"—",amount:"—",pm:"常尊鹏",stage:"主体施工阶段",status:"在建"},
-  {id:24,city:"洛阳市",name:"河南科技大学菁院15号16号宿舍楼项目",address:"洛阳市开元大道263号河南科技大学主校区",builder:"河南科技大学",area:"—",amount:"—",pm:"—",stage:"地基基础",status:"在建"},
-  {id:25,city:"安阳市",name:"G341胶海线林州市区至桃园段新建工程施工第一标段",address:"安阳市林州市起点于龙山街道西街村G341与学院路交叉处",builder:"林州市公路事业发展中心",area:"—",amount:"—",pm:"范俊强",stage:"—",status:"在建"},
-  {id:26,city:"郑州市",name:"郑州海昌海洋公园项目（二期）",address:"郑州市中牟县大孟镇平安大道东1号",builder:"郑州海昌海洋公园旅游发展有限公司",area:"—",amount:"—",pm:"—",stage:"主体施工阶段",status:"在建"},
-  {id:27,city:"洛阳市",name:"洛宁科创产业园建设项目（EPC）",address:"洛阳市洛宁县",builder:"洛宁融宁产业发展有限公司",area:"—",amount:"—",pm:"—",stage:"主体结构",status:"在建"},
-  {id:28,city:"鹤壁市",name:"鹤壁工程技术学院（二期）",address:"鹤壁市淇滨区朝歌路5号",builder:"河南信息科技学院筹建处",area:"—",amount:"—",pm:"—",stage:"主体结构",status:"在建"},
+const geocoder = new AMap.Geocoder({radius:1000,extensions:'all'});
+
+const addrs = [
+  "河南省郑州市郑东新区云溪北路以南，前程路以东、雁鸣路以西，云溪以北",
+  "河南省郑州市郑东新区龙湖北岸，龙湖内环北路与龙源西二街交叉口",
+  "河南省郑州市郑东新区白沙组团科学大道，西起前程路东至龙阳路",
+  "河南省济源市东二环东、苇泉河南、规划南环路北",
+  "河南省河南自贸试验区郑州片区白佛南路与潭南街交叉口东北侧",
+  "河南省郑州市郑东新区九如东路东、如意河东二街南",
+  "河南省郑州市郑东新区河南大学龙子湖校区，明理路379号",
+  "河南省郑州市郑东新区心怡路以东，康宁街以南",
+  "河南省平顶山市平宝大道与西环路交叉口西南角",
+  "河南省郑州市二七区马寨镇工业路8号",
+  "河南省新乡市红旗区东至鸿源街，西至规划路，北至纺织路，南至住宅项目A区用地北边界",
+  "河南省郑州市郑东新区龙湖中环北路南、龙源路东",
+  "河南省郑州航空港区黄海路以南、蓝莲路以北、生物科技四街以西、生物科技一街以东",
+  "河南省郑州市惠济区",
+  "河南省郑州航空港经济综合实验区豫州大道以西、皛店路以南",
+  "河南省郑州市郑东新区",
+  "河南省新乡市平原城乡一体化示范区云梦山路以东、长江大道以北、黄河路以南",
+  "河南省商丘市夏邑县",
+  "河南省郑州高新开发区枫杨街2号",
+  "河南省郑州市郑东新区金水东路南，后贾西街东",
+  "河南省许昌市建安区北外环与魏武路交叉口",
+  "河南省郑州高新区青梅街南、金柏路西",
+  "河南省洛阳市高新区孙旗屯",
+  "河南省洛阳市开元大道263号河南科技大学主校区",
+  "河南省安阳市林州市起点于龙山街道西街村G341与学院路交叉处",
+  "河南省郑州市中牟县大孟镇平安大道东1号",
+  "河南省洛阳市洛宁县",
+  "河南省鹤壁市淇滨区朝歌路5号",
 ];
 
-const cityStats = {};
-projects.forEach(p => { cityStats[p.city] = (cityStats[p.city]||0)+1; });
-const cityView = {"郑州市":[113.625,34.746,10],"济源市":[112.590,35.067,10],"平顶山市":[113.192,33.766,10],"新乡市":[113.926,35.303,10],"许昌市":[113.822,34.036,10],"洛阳市":[112.454,34.620,10],"安阳市":[114.393,36.097,10],"商丘市":[115.656,34.438,10],"鹤壁市":[114.295,35.748,10]};
+const names = ["项目1","项目2","项目3","项目4","项目5","项目6","项目7","项目8","项目9","项目10","项目11","项目12","项目13","项目14","项目15","项目16","项目17","项目18","项目19","项目20","项目21","项目22","项目23","项目24","项目25","项目26","项目27","项目28"];
 
-let map, geocoder, markers=[], infoWindow;
-const coords = {};
+const results = {};
+let idx = 0;
+const log = document.getElementById('log');
 
-window.onload = function() {
-  document.getElementById('loading').classList.add('show');
-  document.getElementById('lt2').textContent = '正在加载高德地图...';
-  map = new AMap.Map('map',{zoom:7,center:[113.0,34.5],viewMode:'2D',mapStyle:'amap://styles/whitesmoke'});
-  AMap.plugin('AMap.ToolBar',()=>map.addControl(new AMap.ToolBar({position:'RB'})));
-  infoWindow = new AMap.InfoWindow({offset:new AMap.Pixel(0,-20),content:''});
-  geocoder = new AMap.Geocoder({radius:1000,extensions:'all'});
-  map.on('complete',()=>{
-    document.getElementById('loading').classList.remove('show');
-    buildCityStats();
-    document.getElementById('info-panel').style.display='block';
-    startGeocode();
-  });
-};
-
-function buildPopup(p) {
-  const statusColor = p.status==='停缓建'?'#ea4335':'#1a73e8';
-  const fmt = v => v&&v!=='—'?v:'—';
-  return `<div class="popup-wrap">
-    <div class="popup-title">${p.name}</div>
-    <table class="popup-table">
-      <tr><th>建设单位</th><td>${fmt(p.builder)}</td></tr>
-      <tr><th>建筑面积</th><td>${fmt(p.area)}${p.area&&p.area!='—'?' 万㎡':''}</td></tr>
-      <tr><th>合同额</th><td>${fmt(p.amount)}${p.amount&&p.amount!='—'?' 亿元':''}</td></tr>
-      <tr><th>形象阶段</th><td style="color:${statusColor};font-weight:600;">${fmt(p.stage)}</td></tr>
-      <tr><th>项目经理</th><td>${fmt(p.pm)}</td></tr>
-      <tr><th>详细地址</th><td style="font-size:12px;color:#666;">${fmt(p.address)}</td></tr>
-    </table>
-    <div class="popup-footer">状态: <span style="color:${statusColor};font-weight:600;">● ${p.status}</span> · ${p.city}</div>
-  </div>`;
+function updateLog(txt) {
+  log.textContent = txt;
+  log.scrollTop = log.scrollHeight;
 }
 
-function startGeocode() {
-  const pending = projects.filter(p=>!coords[p.id]);
-  const total = pending.length;
-  let done = 0;
-  const pbar = document.getElementById('progress-bar');
-  const pbarEl = document.getElementById('progress');
-  pbar.classList.add('show');
-  pending.forEach(p=>{
-    const addr = `河南省${p.city}${p.address||''}`;
-    geocoder.getLocation(addr,(status,result)=>{
-      done++;
-      const pct = Math.round(done/total*100);
-      pbarEl.style.width = pct+'%';
-      document.getElementById('lt2').textContent = `正在解析坐标 ${done}/${total}...`;
-      if(status==='complete'&&result.geocodes.length>0){
-        const loc = result.geocodes[0].location;
-        coords[p.id] = {lng:loc.lng,lat:loc.lat};
+function geocodeOne(name, addr, callback) {
+  geocoder.getLocation(addr, (status, result) => {
+    if (status === 'complete' && result.geocodes && result.geocodes.length > 0) {
+      const loc = result.geocodes[0].location;
+      results[name] = {lng: loc.lng, lat: loc.lat, addr: addr};
+      updateLog(log.textContent + `\n✅ ${name}: lng=${loc.lng}, lat=${loc.lat}`);
+      callback(true, {lng: loc.lng, lat: loc.lat});
+    } else {
+      results[name] = null;
+      updateLog(log.textContent + `\n❌ ${name}: 解析失败`);
+      callback(false, null);
+    }
+  });
+}
+
+function runAll() {
+  idx = 0;
+  updateLog('开始批量解析...\n');
+  runNext();
+}
+
+function runNext() {
+  if (idx >= addrs.length) {
+    updateLog(log.textContent + `\n\n========== 汇总 ==========\n`);
+    for (let i = 0; i < names.length; i++) {
+      const r = results[names[i]];
+      if (r) {
+        updateLog(log.textContent + `  ${names[i]}: lng=${r.lng}, lat=${r.lat}\n`);
       }
-      if(done===total){
-        pbar.classList.remove('show');
-        renderMarkers();
-      }
-    });
-  });
-  if(total===0) renderMarkers();
-}
-
-function renderMarkers() {
-  markers.forEach(m=>m.setMap(null));
-  markers=[];
-  projects.forEach(p=>{
-    let c = coords[p.id];
-    if(!c) return;
-    const color = p.status==='停缓建'?'#ea4335':'#1a73e8';
-    const m = new AMap.Marker({position:[c.lng,c.lat],title:p.name,
-      content:`<div style="width:12px;height:12px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,.3);cursor:pointer;"></div>`,
-      offset:new AMap.Pixel(-6,-6)});
-    m.on('click',()=>{
-      infoWindow.setContent(buildPopup(p));
-      infoWindow.open(map,[c.lng,c.lat]);
-    });
-    m.setMap(map);
-    markers.push(m);
+    }
+    return;
+  }
+  updateLog(log.textContent + `\n[${idx+1}/${addrs.length}] 正在解析: ${names[idx]}...`);
+  geocodeOne(names[idx], addrs[idx], () => {
+    idx++;
+    setTimeout(runNext, 500);
   });
 }
-
-function buildCityStats() {
-  const el=document.getElementById('cs');
-  let html='';
-  Object.entries(cityStats).sort((a,b)=>b[1]-a[1]).forEach(([city,count])=>{
-    html+=`<div class="csi" onclick="focusCity('${city}')"><span>${city}</span><span class="cnt">${count}</span></div>`;
-  });
-  el.innerHTML=html;
-}
-
-function focusCity(city){
-  const v=cityView[city];if(!v)return;
-  map.setZoomAndCenter(v[2],new AMap.LngLat(v[0],v[1]));
-  const list=projects.filter(p=>p.city===city);
-  showList(city+` (${list.length}个项目)`,list);
-}
-
-function showList(title,list){
-  document.getElementById('lt').textContent=title;
-  document.getElementById('lc').textContent=list.length+'个项目';
-  document.getElementById('pis').innerHTML=list.map(p=>{
-    const color=p.status==='停缓建'?'#ea4335':'#1a73e8';
-    return`<div class="pi" onclick="flyTo(${p.id})"><div class="dot" style="background:${color};"></div><div class="info"><div class="name">${p.name}</div><div class="meta">${p.city} · ${p.status}</div></div></div>`;
-  }).join('');
-  document.getElementById('proj-list').classList.add('show');
-}
-
-function flyTo(id){
-  const p=projects.find(pr=>pr.id===id);if(!p||!coords[p.id])return;
-  const c=coords[p.id];
-  map.setZoomAndCenter(14,new AMap.LngLat(c.lng,c.lat));
-  infoWindow.setContent(buildPopup(p));
-  infoWindow.open(map,[c.lng,c.lat]);
-  document.getElementById('proj-list').classList.remove('show');
-}
-
-document.getElementById('si').addEventListener('input',function(e){
-  const q=e.target.value.trim(),sr=document.getElementById('sr');
-  if(q.length<1){sr.style.display='none';return;}
-  const m=projects.filter(p=>p.name.includes(q)||p.city.includes(q));
-  sr.innerHTML=m.length===0?'<div style="color:#999;font-size:12px;padding:6px 8px;">未找到</div>':
-    m.map(p=>`<div class="sri" onclick="flyTo(${p.id});sr.style.display='none';si.value='';"><span class="city-tag">${p.city}</span>${p.name}</div>`).join('');
-  sr.style.display='block';
-});
-document.getElementById('si').addEventListener('blur',()=>setTimeout(()=>sr.style.display='none',200));
 </script>
 </body>
 </html>
