@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>高德地理编码</title>
+<style>
+body{font-family:-apple-system,sans-serif;padding:20px;background:#f0f4ff;}
+h2{color:#1a237e;}
+#log{background:#1a237e;color:#e8eaf6;padding:16px;border-radius:8px;font-size:13px;line-height:1.8;white-space:pre-wrap;max-height:300px;overflow-y:auto;margin-bottom:16px;}
+button{padding:12px 24px;background:#1a73e8;color:white;border:none;border-radius:8px;cursor:pointer;font-size:15px;}
+button:disabled{background:#ccc;}
+</style>
+<script src="https://webapi.amap.com/maps?key=edd630581985546a3f8da8bc4fe9011d&callback=init"></script>
+</head>
+<body>
+<div style="max-width:700px;margin:0 auto;">
+<h2>🗺️ 高德地理编码 - 批量解析中</h2>
+<button id="btn" onclick="startGeo()">开始解析</button>
+<pre id="log">准备就绪，请点击「开始解析」按钮...\n(需要保持此页面在浏览器中打开)</pre>
+<pre id="coords" style="background:#e8f5e9;color:#1b5e20;padding:16px;border-radius:8px;font-size:13px;display:none"></pre>
+</div>
+<script>
+let map, geocoder, counter = 0;
+const projects = [
+  [1,'郑东新区科学谷数字小镇建设项目（一期）EPC总承包','郑州市郑东新区云溪北路以南前程路以东雁鸣路以西云溪以北'],
+  [2,'郑州国际文化交流中心','郑州市郑东新区龙湖北岸龙湖内环北路与龙源西二街交叉口'],
+  [3,'郑东新区天府路以东科学大道地道及两侧道路','郑州市郑东新区白沙组团科学大道西起前程路东至龙阳路'],
+  [4,'紫光苑项目','济源市东二环东苇泉河南'],
+  [5,'中原数字经济科创园','河南自贸试验区郑州片区白佛南路与潭南街交叉口东北侧'],
+  [6,'松苑项目施工总承包工程','郑州市郑东新区九如东路东如意河东二街南'],
+  [7,'河南大学图书综合楼施工总承包项目','郑州市郑东新区河南大学龙子湖校区明理路379号'],
+  [8,'创智科技中心项目施工','郑州市郑东新区心怡路以东康宁街以南'],
+  [9,'平顶山市传染病医院扩建项目','平顶山市平宝大道与西环路交叉口西南角'],
+  [10,'二七区侯寨新镇区安置区NG01-01地块','郑州市二七区侯寨镇工业路8号'],
+  [11,'新乡市红旗区大学城片区城市更新项目一期','新乡市红旗区东至鸿源街西至规划路'],
+  [12,'郑州期货产业园（一期）北区、南区工程施工','郑州市郑东新区龙湖中环北路南龙源路东'],
+  [13,'郑州航空港区豫创建设发展有限公司"两院一中心"','郑州航空港区黄海路以南蓝莲路以北'],
+  [14,'郑州市惠济区S3-2地块建设项目工程总承包','郑州市惠济区英才街与香山路交叉口'],
+  [15,'空铁城·国际总部中心建设项目EPC工程总承包项目','郑州航空港区豫州大道以西皛店路以南'],
+  [16,'聚金揽璟玫瑰园项目','郑州市中牟县黄鹤郡白沙镇凤栖街与郑汴物流通道交叉口西南角'],
+  [17,'河南师范大学博达园学生宿舍建设项目','新乡市平原城乡一体化示范区云梦山路以东长江大道以北'],
+  [18,'中央储备粮商丘直属库夏邑分公司仓储项目','商丘市夏邑县曹集乡中央储备粮商丘直属库夏邑分公司院内'],
+  [19,'中国烟草总公司郑州烟草研究院科研基础设施升级改造项目','郑州高新开发区枫杨街2号'],
+  [20,'智学产业园施工','郑州市郑东新区金水东路南后贾西街东'],
+  [21,'中原电气谷智能电气城项目（一期）工程总承包（EPC）三标段','许昌市建安区北外环与魏武路交叉口'],
+  [22,'智能感知与数字装备产业基地项目','郑州高新区青梅街南金柏路西'],
+  [23,'洛阳高新区棚户区改造孙旗屯三期项目','洛阳市高新区孙旗屯'],
+  [24,'河南科技大学菁院15号16号宿舍楼项目','洛阳市开元大道263号河南科技大学主校区'],
+  [25,'G341胶海线林州市区至桃园段新建工程施工第一标段','安阳市林州市龙山街道西街村G341与学院路交叉处'],
+  [26,'郑州海昌海洋公园旅游发展有限公司','郑州市中牟县大孟镇平安大道东1号'],
+  [27,'洛宁科创产业园建设项目（EPC）','洛阳市洛宁县'],
+  [28,'鹤壁工程技术学院（二期）','鹤壁市淇滨区朝歌路5号'],
+];
+
+function log(t) {
+  const el = document.getElementById('log');
+  el.textContent += '\n' + t;
+  el.scrollTop = el.scrollHeight;
+}
+
+function showCoords(t) {
+  const el = document.getElementById('coords');
+  el.style.display = 'block';
+  el.textContent += '\n' + t;
+  el.scrollTop = el.scrollHeight;
+}
+
+function init() {
+  try {
+    map = new AMap.Map('__fake__', {resizeEnable: true});
+    geocoder = new AMap.Geocoder({radius: 500, extensions: 'all'});
+    log('✅ 高德地图加载成功！');
+  } catch(e) {
+    log('❌ 高德加载失败: ' + e.message);
+  }
+}
+
+function startGeo() {
+  if (!geocoder) { log('❌ 高德未加载，请刷新页面重试'); return; }
+  document.getElementById('btn').disabled = true;
+  counter = 0;
+  log('开始批量解析，共 ' + projects.length + ' 个项目...\n---');
+  showCoords('|序号|名称|lat|lon|');
+  
+  setTimeout(geoNext, 500);
+}
+
+function geoNext() {
+  if (counter >= projects.length) {
+    log('\n✅ 全部完成！共 ' + projects.length + ' 个项目');
+    document.getElementById('btn').disabled = false;
+    return;
+  }
+  
+  const [seq, name, addr] = projects[counter];
+  geocoder.getLocation(addr, function(status, result) {
+    if (status === 'complete' && result.geocodes.length > 0) {
+      const loc = result.geocodes[0].location;
+      log('✅ [' + seq + '] ' + name.substring(0,15) + ': ' + loc.lng + ',' + loc.lat);
+      showCoords('|' + seq + '|' + name.substring(0,20) + '|' + loc.lat + '|' + loc.lng + '|');
+    } else {
+      log('❌ [' + seq + '] ' + name.substring(0,15) + ': 解析失败');
+      showCoords('|' + seq + '|' + name.substring(0,20) + '|失败|失败|');
+    }
+    counter++;
+    setTimeout(geoNext, 600);
+  });
+}
+</script>
+</body>
+</html>
