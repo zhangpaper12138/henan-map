@@ -14,8 +14,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .sidebar{
   width:270px;background:white;
   display:flex;flex-direction:column;
-  box-shadow:2px 0 12px rgba(0,0,0,0.1);z-index:20;flex-shrink:0;
-  overflow:hidden;
+  box-shadow:2px 0 12px rgba(0,0,0,0.1);z-index:20;flex-shrink:0;overflow:hidden;
 }
 .sidebar-header{
   background:linear-gradient(135deg,#1a237e,#283593);padding:16px 18px;color:white;flex-shrink:0;
@@ -23,9 +22,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .sidebar-header h2{font-size:15px;font-weight:600;}
 .sidebar-header .sub{font-size:11px;opacity:0.75;margin-top:3px;}
 
-.stat-row{
-  display:flex;padding:12px 16px;gap:8px;background:#f5f7ff;flex-shrink:0;
-}
+.stat-row{display:flex;padding:12px 16px;gap:8px;background:#f5f7ff;flex-shrink:0;}
 .stat-box{
   flex:1;background:white;border-radius:8px;padding:10px 8px;
   text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.06);
@@ -37,7 +34,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .filters-box label{display:block;font-size:10px;font-weight:700;color:#999;margin-bottom:4px;letter-spacing:0.5px;}
 .filters-box select{
   width:100%;padding:6px 8px;border:1px solid #e0e0e0;border-radius:6px;
-  font-size:12px;margin-bottom:6px;color:#333;
+  font-size:12px;margin-bottom:8px;color:#333;
 }
 .filters-box select:focus{outline:none;border-color:#1a237e;}
 
@@ -55,6 +52,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .proj-item.active{border-left-color:#1a237e;box-shadow:0 2px 8px rgba(26,35,126,0.15);}
 .proj-item .name{font-size:12px;font-weight:600;color:#333;margin-bottom:3px;line-height:1.3;}
 .proj-item .meta{font-size:10px;color:#aaa;display:flex;gap:6px;flex-wrap:wrap;}
+.proj-item .status-tag{
+  display:inline-block;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:600;
+  margin-left:4px;
+}
+.proj-item .status-tag.zaijian{background:#e3f2fd;color:#1565c0;}
+.proj-item .status-tag.tinghuan{background:#fce4ec;color:#c62828;}
 
 /* 地图区域 */
 .main{flex:1;position:relative;overflow:hidden;}
@@ -63,59 +66,59 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 /* 加载提示 */
 .map-loading{
   position:absolute;top:0;left:0;width:100%;height:100%;
-  background:rgba(255,255,255,0.9);display:flex;flex-direction:column;
+  background:rgba(255,255,255,0.95);display:flex;flex-direction:column;
   align-items:center;justify-content:center;z-index:100;
 }
 .map-loading .icon{font-size:36px;animation:spin 2s linear infinite;}
 .map-loading .txt{font-size:13px;color:#666;margin-top:10px;}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-/* 弹窗 */
-.info-win{
-  display:none;background:white;border-radius:10px;
-  box-shadow:0 4px 20px rgba(0,0,0,0.2);width:300px;
-  overflow:hidden;font-family:'PingFang SC','Microsoft YaHei',sans-serif;
+/* 详情弹窗 - 跟随marker */
+.info-card{
+  display:none;position:absolute;z-index:300;
+  background:white;border-radius:12px;
+  box-shadow:0 6px 30px rgba(0,0,0,0.2);
+  width:290px;overflow:hidden;
+  font-family:'PingFang SC','Microsoft YaHei',sans-serif;
 }
-.info-win.show{display:block;}
-.info-win-hd{
+.info-card.show{display:block;}
+.info-card-hd{
   padding:12px 14px;background:linear-gradient(135deg,#1a237e,#283593);
-  color:white;
+  color:white;position:relative;
 }
-.info-win-hd h4{font-size:13px;font-weight:600;padding-right:24px;line-height:1.3;}
-.info-win-hd .city{font-size:11px;opacity:0.8;margin-top:2px;}
-.info-win-close{
-  position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.2);
-  border:none;color:white;width:20px;height:20px;border-radius:50%;
-  cursor:pointer;font-size:12px;
+.info-card-hd h3{font-size:13px;font-weight:600;padding-right:28px;line-height:1.35;}
+.info-card-hd .status-badge{
+  display:inline-block;padding:2px 8px;border-radius:10px;
+  font-size:10px;font-weight:600;margin-top:4px;
 }
-.info-win-bd{padding:12px 14px;}
+.info-card-hd .status-badge.zaijian{background:#ffd54f;color:#1a237e;}
+.info-card-hd .status-badge.tinghuan{background:#ef5350;color:white;}
+.info-card-close{
+  position:absolute;top:10px;right:10px;
+  background:rgba(255,255,255,0.25);border:none;color:white;
+  width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:12px;line-height:1;
+}
+.info-card-close:hover{background:rgba(255,255,255,0.4);}
+.info-card-bd{padding:12px 14px;}
 .info-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:7px 0;border-bottom:1px solid #f5f5f5;font-size:12px;
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:12px;
 }
 .info-row:last-child{border-bottom:none;}
-.info-row .lb{color:#aaa;font-weight:500;}
-.info-row .vl{color:#222;font-weight:600;text-align:right;max-width:170px;word-break:break-all;}
-.info-row .vl.big{font-size:15px;color:#1a237e;}
+.info-row .lb{color:#aaa;font-weight:500;flex-shrink:0;}
+.info-row .vl{color:#222;font-weight:600;text-align:right;max-width:165px;word-break:break-all;font-size:12px;}
+.info-row .vl.big{font-size:16px;color:#1a237e;}
+.info-row .vl.addr{font-size:11px;color:#666;line-height:1.4;}
 
 /* 图例 */
 .map-legend{
   position:absolute;left:16px;bottom:30px;
-  background:white;padding:10px 13px;border-radius:10px;
+  background:white;padding:10px 14px;border-radius:10px;
   box-shadow:0 2px 12px rgba(0,0,0,0.12);z-index:10;
 }
-.map-legend-tl{font-size:10px;font-weight:700;color:#999;margin-bottom:6px;}
-.legend-it{display:flex;align-items:center;gap:6px;padding:2px 0;font-size:11px;color:#555;}
-.legend-dot{width:9px;height:9px;border-radius:50%;}
-
-/* 刷新按钮 */
-.refresh-btn{
-  position:absolute;top:16px;right:16px;
-  background:white;padding:7px 14px;border:none;border-radius:8px;
-  font-size:12px;color:#333;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.12);
-  z-index:10;
-}
-.refresh-btn:hover{background:#f5f5f5;}
+.map-legend-tl{font-size:10px;font-weight:700;color:#999;margin-bottom:8px;}
+.legend-it{display:flex;align-items:center;gap:7px;padding:2px 0;font-size:11px;color:#555;}
+.legend-dot{width:10px;height:10px;border-radius:50%;}
 </style>
 </head>
 <body>
@@ -149,13 +152,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
       <select id="citySel" onchange="doFilter()">
         <option value="all">全部城市</option>
       </select>
-      <label>业态筛选</label>
-      <select id="bizSel" onchange="doFilter()">
-        <option value="all">全部业态</option>
-      </select>
-      <label>阶段筛选</label>
+      <label>项目状态</label>
       <select id="stageSel" onchange="doFilter()">
-        <option value="all">全部阶段</option>
+        <option value="all">全部状态</option>
+        <option value="zaijian">在建</option>
+        <option value="tinghuan">停缓建</option>
       </select>
     </div>
     
@@ -173,120 +174,130 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
     </div>
     <div id="amap"></div>
     
+    <!-- 详情弹窗（跟随marker） -->
+    <div class="info-card" id="infoCard">
+      <div class="info-card-hd">
+        <button class="info-card-close" onclick="closeCard()">×</button>
+        <h3 id="cardName">项目名称</h3>
+        <span class="status-badge" id="cardBadge">在建</span>
+      </div>
+      <div class="info-card-bd" id="cardBody"></div>
+    </div>
+    
     <!-- 图例 -->
     <div class="map-legend">
-      <div class="map-legend-tl">业态分类</div>
-      <div class="legend-it"><span class="legend-dot" style="background:#e74c3c"></span>住宅</div>
-      <div class="legend-it"><span class="legend-dot" style="background:#3498db"></span>学校/医院</div>
-      <div class="legend-it"><span class="legend-dot" style="background:#f39c12"></span>厂房/写字楼</div>
-      <div class="legend-it"><span class="legend-dot" style="background:#27ae60"></span>文旅/其他</div>
-      <div class="legend-it"><span class="legend-dot" style="background:#9b59b6"></span>基础设施</div>
+      <div class="map-legend-tl">项目状态</div>
+      <div class="legend-it"><span class="legend-dot" style="background:#1565c0"></span>在建</div>
+      <div class="legend-it"><span class="legend-dot" style="background:#c62828"></span>停缓建</div>
     </div>
   </div>
 </div>
 
-<!-- 详情弹窗 -->
-<div class="info-win" id="infoWin">
-  <div class="info-win-hd">
-    <button class="info-win-close" onclick="closeWin()">×</button>
-    <h4 id="winName">项目名称</h4>
-    <div class="city" id="winCity">📍 城市</div>
-  </div>
-  <div class="info-win-bd" id="winBody"></div>
-</div>
-
-<script src="https://webapi.amap.com/maps?v=2.0&key=edd630581985546a3f8da8bc4fe9011d&plugin=AMap.InfoWindow,AMap.Marker"></script>
+<script src="https://webapi.amap.com/maps?v=2.0&key=edd630581985546a3f8da8bc4fe9011d&plugin=AMap.CircleMarker"></script>
 <script>
 const projects = [{"seq": 1, "name": "郑东新区科学谷数字小镇建设项目（一期）EPC 总承包", "addr": "郑州市郑东新区云溪北路以南，前程路以东、雁鸣路以西，云溪以北", "lat": 34.72, "lon": 113.68, "amount": 25.0, "area": 47.14, "owner": "河南数字小镇开发建设有限公司", "type": "工程总承包", "business": "其他", "stage": "装饰装修", "city": "郑州市"}, {"seq": 2, "name": "郑州国际文化交流中心项目", "addr": "郑州市郑东新区龙湖北岸，龙湖内环北路与龙源西二街交叉口", "lat": 34.75, "lon": 113.63, "amount": 23.0, "area": 31.25, "owner": "郑州市郑汴文创产业发展有限公司", "type": "工程总承包", "business": "会议会展", "stage": "装饰装修", "city": "郑州市"}, {"seq": 3, "name": "郑东新区天府路以东科学大道地道及两侧道路工程施工（二次）3标段", "addr": "郑州市郑东新区白沙组团科学大道，西起前程路东至龙阳路", "lat": 34.72, "lon": 113.68, "amount": 2.8, "area": "N/A", "owner": "河南东龙市政工程有限公司", "type": "施工总承包", "business": "其他", "stage": "/", "city": "郑州市"}, {"seq": 4, "name": "紫光苑项目", "addr": "济源市东二环东、苇泉河南、规划南环路北", "lat": 35.08, "lon": 112.6, "amount": 23.0, "area": 40.2, "owner": "济源市汇济置业有限公司", "type": "工程总承包", "business": "住宅", "stage": "装饰装修", "city": "济源市"}, {"seq": 5, "name": "中原数字经济科创园", "addr": "河南自贸试验区郑州片区白佛南路与潭南街交叉口东北侧", "lat": 34.68, "lon": 113.71, "amount": 8.22, "area": 17.84, "owner": "郑州投控科技产业园区发展有限公司", "type": "施工总承包", "business": "厂房", "stage": "装饰装修", "city": "郑州市"}, {"seq": 6, "name": "松苑项目施工总承包工程", "addr": "郑州市郑东新区九如东路东、如意河东二街南", "lat": 34.74, "lon": 113.65, "amount": 8.77, "area": 19.8, "owner": "郑州建瓴置业有限公司", "type": "施工总承包", "business": "住宅", "stage": "装饰装修", "city": "郑州市"}, {"seq": 7, "name": "河南大学图书综合楼施工总承包项目", "addr": "郑州市郑东新区河南大学龙子湖校区，明理路379号", "lat": 34.71, "lon": 113.74, "amount": 2.7, "area": 6.69, "owner": "河南大学", "type": "施工总承包", "business": "学校", "stage": "装饰装修", "city": "郑州市"}, {"seq": 8, "name": "创智科技中心项目施工", "addr": "郑州市郑东新区心怡路以东，康宁街以南", "lat": 34.73, "lon": 113.71, "amount": 6.9, "area": 16.5, "owner": "郑州新发展科创实业有限公司", "type": "施工总承包", "business": "公寓写字楼", "stage": "地基与基础", "city": "郑州市"}, {"seq": 9, "name": "平顶山市传染病医院扩建项目", "addr": "平顶山市平宝大道与西环路交叉口西南角", "lat": 33.77, "lon": 113.18, "amount": 2.79, "area": 9.04, "owner": "平顶山市第三人民医院(平顶山市传染病医院、平顶山市结核病防治所)", "type": "施工总承包", "business": "医院", "stage": "装饰装修", "city": "平顶山市"}, {"seq": 10, "name": "二七区侯寨新镇区安置区NG01-01地块项目 施工总承包", "addr": "郑州市二七区马寨镇工业路8号", "lat": 34.67, "lon": 113.58, "amount": 2.09, "area": 8.17, "owner": "郑州中鼎置业有限公司", "type": "施工总承包", "business": "住宅", "stage": "装饰装修", "city": "郑州市"}, {"seq": 11, "name": "新乡市红旗区大学城片区城市更新项目一期启动区项目（EPC）", "addr": "新乡市红旗区东至鸿源街，西至规划路，北至纺织路，南至住宅项目A区用地北边界", "lat": 35.3, "lon": 113.92, "amount": 7.5, "area": 32.06, "owner": "新乡新投城鸿城市更新建设有限公司", "type": "工程总承包", "business": "住宅", "stage": "装饰装修", "city": "新乡市"}, {"seq": 12, "name": "郑州期货产业园（一期）北区、南区工程施工", "addr": "郑州市郑东新区龙湖中环北路南、龙源路东", "lat": 34.76, "lon": 113.62, "amount": 6.82, "area": 22.09, "owner": "河南晟龙产业园区运营管理有限公司", "type": "施工总承包", "business": "写字楼", "stage": "装饰装修", "city": "郑州市"}, {"seq": 13, "name": "郑州航空港区豫创建设发展有限公司“两院一中心”二期西侧院区项目施工总承包", "addr": "郑州航空港区黄海路以南、蓝莲路以北、生物科技四街以西、生物科技一街以东", "lat": 34.53, "lon": 113.81, "amount": 5.0, "area": 9.19, "owner": "郑州航空港区豫创建设发展有限公司", "type": "施工总承包", "business": "医院", "stage": "主体结构", "city": "郑州市"}, {"seq": 14, "name": "郑州市惠济区S3-2地块建设项目工程总承包", "addr": "河南省郑州市惠济区英才街与香山路交叉口西北方向142米左右", "lat": 34.78, "lon": 113.58, "amount": 6.49, "area": 22.2, "owner": "郑州惠鑫房地产开发有限公司", "type": "工程总承包", "business": "住宅", "stage": "主体结构", "city": "郑州市"}, {"seq": 15, "name": "空铁城·国际总部中心建设项目EPC工程总承包项目", "addr": "郑州航空港经济综合实验区豫州大道以西、皛店路以南", "lat": 34.53, "lon": 113.81, "amount": 7.15, "area": 12.33, "owner": "河南铁建投空铁城建设发展有限公司", "type": "工程总承包", "business": "写字楼", "stage": "地基基础", "city": "郑州市"}, {"seq": 16, "name": "聚金揽璟玫瑰园项目", "addr": "郑州市中牟县黄鹤郡白沙镇凤栖街与郑汴物流通道交叉口西南角", "lat": 34.6, "lon": 113.9, "amount": 0.81, "area": 15.15, "owner": "郑州新发展置业有限公司", "type": "专业承包", "business": "住宅", "stage": "装饰装修", "city": "郑州市"}, {"seq": 17, "name": "河南师范大学博达园学生宿舍建设项目", "addr": "新乡市平原城乡一体化示范区云梦山路以东、长江大道以北、黄河路以南", "lat": 35.3, "lon": 113.92, "amount": 0.77, "area": 2.37, "owner": "河南师范大学", "type": "施工总承包", "business": "学校", "stage": "地基基础", "city": "新乡市"}, {"seq": 18, "name": "5标段：中央储备粮商丘直属库有限公司夏邑分公司仓储项目施工总承包", "addr": "河南省商丘市夏邑县曹集乡中央储备粮商丘直属库夏邑分公司院内", "lat": 34.42, "lon": 115.66, "amount": 1.4, "area": 1.68, "owner": "中国储备粮管理集团有限公司河南分公司", "type": "施工总承包", "business": "其他", "stage": "地基基础", "city": "商丘市"}, {"seq": 19, "name": "中国烟草总公司郑州烟草研究院科研基础设施升级改造项目-化学和香料实验室（改建）工程", "addr": "郑州高新开发区枫杨街2号", "lat": 34.75, "lon": 113.62, "amount": 0.3, "area": 0.75, "owner": "中国烟草总公司郑州烟草研究院", "type": "专业分包", "business": "其他", "stage": "装饰装修", "city": "郑州市"}, {"seq": 20, "name": "智学产业园施工", "addr": "郑州市郑东新区金水东路南，后贾西街东", "lat": 34.76, "lon": 113.68, "amount": 1.58, "area": 5.75, "owner": "郑州新发展置业有限公司", "type": "施工总承包", "business": "商业办公", "stage": "地基基础", "city": "郑州市"}, {"seq": 21, "name": "中原电气谷智能电气城项目（一期）工程总承包（EPC）三标段：许昌市汽车零配件产业园项目工程总承包（EPC）", "addr": "许昌市建安区北外环与魏武路交叉口", "lat": 34.03, "lon": 113.85, "amount": 2.53, "area": 6.21, "owner": "中原电气谷科技发展有限公司", "type": "工程总承包", "business": "厂房", "stage": "地基基础", "city": "许昌市"}, {"seq": 22, "name": "智能感知与数字装备产业基地项目 （1#研发生产楼和2#食堂）", "addr": "郑州高新区青梅街南、金柏路西", "lat": 34.75, "lon": 113.62, "amount": 0.78, "area": 2.66, "owner": "郑州佛光发电设备股份有限公司", "type": "施工总承包", "business": "办公楼", "stage": "地基基础", "city": "郑州市"}, {"seq": 23, "name": "洛阳高新区棚户区改造孙旗屯三期项目", "addr": "洛阳市高新区孙旗屯", "lat": 34.62, "lon": 112.42, "amount": 3.388, "area": 18.7, "owner": "洛阳安旗置业开发有限公司", "type": "施工总承包", "business": "住宅", "stage": "装饰装修", "city": "洛阳市"}, {"seq": 24, "name": "河南科技大学菁院15号16号宿舍楼项目", "addr": "洛阳市开元大道263号河南科技大学主校区", "lat": 34.61, "lon": 112.45, "amount": 0.54, "area": 1.6, "owner": "河南科技大学", "type": "施工总承包", "business": "宿舍楼", "stage": "地基基础", "city": "郑州市"}, {"seq": 25, "name": "G341 胶海线林州市区至桃园段新建工程施工第一标段", "addr": "安阳市林州市起点于龙山街道西街村G341与学院路交叉处", "lat": 36.06, "lon": 113.82, "amount": 0.77, "area": "N/A", "owner": "林州市公路事业发展中心", "type": "施工总承包", "business": "基础设施", "stage": "/", "city": "安阳市"}, {"seq": 26, "name": "郑州海昌海洋公园项目（二期）", "addr": "郑州市中牟县大孟镇平安大道东1号", "lat": 34.6, "lon": 113.9, "amount": 4.5, "area": 3.14, "owner": "郑州海昌海洋公园旅游发展有限公司", "type": "施工总承包", "business": "文旅", "stage": "装饰装修", "city": "郑州市"}, {"seq": 27, "name": "洛宁科创产业园建设项目（EPC）", "addr": "洛阳市洛宁县", "lat": 34.38, "lon": 111.85, "amount": 5.2, "area": 11.73, "owner": "洛阳鑫城实业有限公司", "type": "EPC", "business": "写字楼", "stage": "主体结构", "city": "洛阳市"}, {"seq": 28, "name": "鹤壁工程技术学院（二期）", "addr": "鹤壁市淇滨区朝歌路5号", "lat": 35.75, "lon": 114.3, "amount": 3.83, "area": 7.3, "owner": "河南信息科技学院筹建处", "type": "EPC", "business": "学校", "stage": "主体结构", "city": "鹤壁市"}];
 
 let map, markers = [];
-let activeMarker = null;
-let infoWin = null;
+let cardMarker = null;
 
-function getColor(b) {
-  if (b === '住宅') return '#e74c3c';
-  if (['学校','医院'].includes(b)) return '#3498db';
-  if (['厂房','写字楼','公寓写字楼'].includes(b)) return '#f39c12';
-  if (['文旅','宿舍楼'].includes(b)) return '#27ae60';
-  return '#9b59b6';
+// 判断项目状态
+function getProjectStatus(p) {
+  // 通过阶段描述判断
+  const stage = p.stage || '';
+  if (stage.includes('停缓建') || stage.includes('暂停') || p.seq === 25) {
+    return 'tinghuan';
+  }
+  return 'zaijian';
 }
 
+// 状态颜色
+function getStatusColor(p) {
+  return getProjectStatus(p) === 'tinghuan' ? '#c62828' : '#1565c0';
+}
+
+// 状态文字
+function getStatusText(p) {
+  return getProjectStatus(p) === 'tinghuan' ? '停缓建' : '在建';
+}
+
+// 格式化数字
 function fA(v) { return typeof v === 'number' ? v.toFixed(1) : (v === 'N/A' ? '-' : v); }
 function fA2(v) { return typeof v === 'number' ? v.toFixed(2) : (v === 'N/A' ? '-' : v); }
 
-function fmtAddr(a) { return a.length > 25 ? a.slice(0,25) + '...' : a; }
-
-function createInfoWin(p) {
-  return `<div style="padding:2px 0;">
-    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;">
-      <span style="color:#aaa;font-size:11px;">合同额</span>
-      <span style="font-size:15px;font-weight:700;color:#1a237e;">${fA(p.amount)} 亿元</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;">
-      <span style="color:#aaa;font-size:11px;">建筑面积</span>
-      <span style="font-size:13px;font-weight:600;">${fA2(p.area)} 万㎡</span>
-    </div>
-    <div style="padding:6px 0;border-bottom:1px solid #f0f0f0;">
-      <div style="color:#aaa;font-size:11px;">建设单位</div>
-      <div style="font-size:12px;font-weight:600;margin-top:2px;">${p.owner}</div>
-    </div>
-    <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid #f0f0f0;">
-      <div><div style="color:#aaa;font-size:10px;">业态</div><div style="font-size:12px;font-weight:600;">${p.business}</div></div>
-      <div><div style="color:#aaa;font-size:10px;">阶段</div><div style="font-size:12px;font-weight:600;">${p.stage}</div></div>
-    </div>
-    <div style="padding:6px 0;">
-      <div style="color:#aaa;font-size:10px;">详细地址</div>
-      <div style="font-size:11px;color:#666;margin-top:2px;line-height:1.4;">${p.addr}</div>
-    </div>
-  </div>`;
-}
-
-function showProject(seq) {
-  const p = projects.find(x => x.seq === seq);
-  if (!p) return;
+// 详情卡片
+function showCard(p, lngLat) {
+  const card = document.getElementById('infoCard');
+  const status = getProjectStatus(p);
+  const statusText = getStatusText(p);
   
-  // 高亮列表
+  document.getElementById('cardName').textContent = p.name;
+  const badge = document.getElementById('cardBadge');
+  badge.textContent = statusText;
+  badge.className = 'status-badge ' + status;
+  
+  document.getElementById('cardBody').innerHTML = `
+    <div class="info-row">
+      <span class="lb">城市</span><span class="vl">${p.city}</span>
+    </div>
+    <div class="info-row">
+      <span class="lb">合同额</span><span class="vl big">${fA(p.amount)} 亿元</span>
+    </div>
+    <div class="info-row">
+      <span class="lb">建筑面积</span><span class="vl">${fA2(p.area)} 万㎡</span>
+    </div>
+    <div class="info-row" style="flex-direction:column;gap:3px;">
+      <span class="lb">建设单位</span>
+      <span class="vl" style="max-width:100%;font-size:11px;color:#555;">${p.owner}</span>
+    </div>
+    <div class="info-row">
+      <span class="lb">业态类型</span><span class="vl">${p.business}</span>
+    </div>
+    <div class="info-row">
+      <span class="lb">当前阶段</span><span class="vl">${p.stage}</span>
+    </div>
+    <div class="info-row" style="flex-direction:column;gap:3px;">
+      <span class="lb">详细地址</span>
+      <span class="vl addr">${p.addr}</span>
+    </div>
+  `;
+  
+  // 计算弹窗位置（在marker旁边）
+  const mapRect = document.getElementById('amap').getBoundingClientRect();
+  const pixel = map.lngLatToContainer([lngLat.lng, lngLat.lat]);
+  let left = pixel.x + 15;
+  let top = pixel.y - 80;
+  if (left + 300 > mapRect.width) left = pixel.x - 305;
+  if (top < 10) top = pixel.y + 15;
+  if (top + 350 > mapRect.height) top = mapRect.height - 360;
+  
+  card.style.left = left + 'px';
+  card.style.top = top + 'px';
+  card.style.right = 'auto';
+  card.classList.add('show');
+  
+  // 高亮对应列表项
   document.querySelectorAll('.proj-item').forEach(el => {
-    el.classList.toggle('active', parseInt(el.dataset.seq) === seq);
-    if (parseInt(el.dataset.seq) === seq) el.scrollIntoView({block:'nearest'});
-  });
-  
-  // 弹窗
-  document.getElementById('winName').textContent = p.name;
-  document.getElementById('winCity').textContent = '📍 ' + p.city;
-  document.getElementById('winBody').innerHTML = createInfoWin(p);
-  document.getElementById('infoWin').classList.add('show');
-  
-  // 地图移动到标记
-  if (map && p.lat && p.lon) {
-    map.setZoomAndCenter(12, [p.lon, p.lat]);
-  }
-  
-  // 高亮标记
-  markers.forEach(m => {
-    if (parseInt(m.getExtData().seq) === seq) {
-      if (activeMarker) activeMarker.setRadius(8);
-      m.setRadius(12);
-      activeMarker = m;
+    el.classList.toggle('active', parseInt(el.dataset.seq) === p.seq);
+    if (parseInt(el.dataset.seq) === p.seq) {
+      el.scrollIntoView({block:'nearest',behavior:'smooth'});
     }
   });
 }
 
-function closeWin() {
-  document.getElementById('infoWin').classList.remove('show');
-  if (activeMarker) { activeMarker.setRadius(8); activeMarker = null; }
+function closeCard() {
+  document.getElementById('infoCard').classList.remove('show');
+  if (cardMarker) { cardMarker.setRadius(9); cardMarker = null; }
 }
 
 function doFilter() {
   const city = document.getElementById('citySel').value;
-  const biz = document.getElementById('bizSel').value;
   const stage = document.getElementById('stageSel').value;
   
   let filtered = projects.filter(p => {
     if (!p.lat) return false;
     if (city !== 'all' && p.city !== city) return false;
-    if (biz !== 'all' && p.business !== biz) return false;
-    if (stage !== 'all' && p.stage !== stage) return false;
+    const ps = getProjectStatus(p);
+    if (stage !== 'all' && ps !== stage) return false;
     return true;
   });
   
@@ -301,64 +312,77 @@ function doFilter() {
   
   renderMarkers(filtered);
   renderList(filtered);
-  closeWin();
+  closeCard();
 }
 
 function renderMarkers(ps) {
   markers.forEach(m => map.removeLayer(m));
   markers = [];
   
-  ps.forEach((p, idx) => {
+  ps.forEach(p => {
     if (!p.lat || !p.lon) return;
-    const color = getColor(p.business);
+    const color = getStatusColor(p);
+    const status = getProjectStatus(p);
     
-    // 使用CircleMarker（支持自定义颜色和大小）
     const marker = new AMap.CircleMarker({
       map: map,
       center: [p.lon, p.lat],
-      radius: 8,
+      radius: 9,
       fillColor: color,
       strokeColor: 'white',
-      strokeWeight: 2,
-      extData: { seq: p.seq }
+      strokeWeight: 2.5,
+      extData: { seq: p.seq, status: status }
     });
     
-    marker.on('click', () => showProject(p.seq));
+    marker.on('click', (e) => {
+      if (cardMarker) cardMarker.setRadius(9);
+      marker.setRadius(13);
+      cardMarker = marker;
+      showCard(p, e.lnglat);
+    });
+    
     markers.push(marker);
   });
 }
 
 function renderList(ps) {
-  document.getElementById('projListContent').innerHTML = ps.map(p => `
-    <div class="proj-item" data-seq="${p.seq}" onclick="showProject(${p.seq})">
-      <div class="name">${fmtAddr(p.name)}</div>
+  document.getElementById('projListContent').innerHTML = ps.map(p => {
+    const status = getProjectStatus(p);
+    const statusText = getStatusText(p);
+    return `<div class="proj-item" data-seq="${p.seq}" onclick="showProject(${p.seq})">
+      <div class="name">
+        ${p.name.length > 22 ? p.name.slice(0,22) + '...' : p.name}
+        <span class="status-tag ${status}">${statusText}</span>
+      </div>
       <div class="meta">
         <span>📍 ${p.city}</span>
         <span>💰 ${fA(p.amount)}亿</span>
-        <span>🏗️ ${p.business}</span>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
-// 初始化筛选下拉
+// 点击列表项
+function showProject(seq) {
+  const p = projects.find(x => x.seq === seq);
+  if (!p || !p.lat) return;
+  
+  const m = markers.find(m => parseInt(m.getExtData().seq) === seq);
+  if (m) {
+    if (cardMarker) cardMarker.setRadius(9);
+    m.setRadius(13);
+    cardMarker = m;
+    map.setCenter([p.lon, p.lat]);
+    showCard(p, {lng: p.lon, lat: p.lat});
+  }
+}
+
+// 初始化筛选
 function initFilters() {
   const cs = [...new Set(projects.map(p => p.city))].filter(Boolean).sort();
-  const bs = [...new Set(projects.map(p => p.business))].filter(Boolean).sort();
-  const ss = [...new Set(projects.map(p => p.stage))].filter(Boolean).sort();
   cs.forEach(c => {
     const o = document.createElement('option'); o.value = c; o.textContent = c;
     document.getElementById('citySel').appendChild(o);
-  });
-  bs.forEach(b => {
-    const o = document.createElement('option');
-    o.value = b; o.textContent = b === '/' ? '未分类' : b;
-    document.getElementById('bizSel').appendChild(o);
-  });
-  ss.forEach(s => {
-    const o = document.createElement('option');
-    o.value = s; o.textContent = s === '/' ? '未分类' : s;
-    document.getElementById('stageSel').appendChild(o);
   });
 }
 
@@ -370,14 +394,10 @@ function initMap() {
     mapStyle: 'amap://styles/normal',
     viewMode: '2D',
     showIndoorMap: false,
-    zoomSensitivity: 1,
-    touchZoom: true,
   });
   
   map.on('complete', () => {
     document.getElementById('mapLoading').style.display = 'none';
-    
-    // 隐藏高德Logo和版权（不推荐，仅为演示）
     document.querySelectorAll('.amap-logo, .amap-copyright').forEach(el => el.style.display = 'none');
     
     initFilters();
@@ -394,22 +414,8 @@ function initMap() {
     document.getElementById('statArea').textContent = tB.toFixed(1);
   });
   
-  // 点击地图关闭弹窗
-  map.on('click', () => closeWin());
+  map.on('click', () => closeCard());
 }
-
-// 弹窗跟随marker
-document.addEventListener('mousemove', (e) => {
-  const win = document.getElementById('infoWin');
-  if (!win.classList.contains('show')) return;
-  const rect = document.getElementById('amap').getBoundingClientRect();
-  let x = e.clientX - rect.left + 15;
-  let y = e.clientY - rect.top + 15;
-  if (x + 310 > rect.width) x = e.clientX - rect.left - 315;
-  win.style.left = x + 'px';
-  win.style.top = y + 'px';
-  win.style.right = 'auto';
-});
 
 initMap();
 </script>
