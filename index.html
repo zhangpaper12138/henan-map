@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <title>坐标解析测试</title>
 <style>
-  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;padding:20px;background:#f5f5f5;}
-  h2{color:#1a1a2e;}
-  .test-item{margin:8px 0;display:flex;align-items:center;gap:10px;}
-  .test-item input{flex:1;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:13px;}
-  button{padding:8px 16px;background:#1a73e8;color:white;border:none;border-radius:6px;cursor:pointer;}
-  button:hover{background:#1557b0;}
-  .result{margin-top:4px;padding:8px;background:#e8f0fe;border-radius:4px;font-size:13px;color:#1a73e8;display:none;}
-  .all-btn{margin:20px 0;padding:12px 24px;background:#ea4335;color:white;border:none;border-radius:6px;cursor:pointer;font-size:14px;}
-  .log{background:#fff;padding:15px;border-radius:8px;margin-top:20px;max-height:400px;overflow-y:auto;font-size:12px;color:#333;white-space:pre-wrap;border:1px solid #e0e0e0;}
-  .ok{color:#1a73e8;font-weight:600;}
-  .fail{color:#ea4335;}
+ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;padding:20px;background:#f5f5f5;}
+ h2{color:#1a1a2e;}
+ .test-item{margin:8px 0;display:flex;align-items:center;gap:10px;}
+ .test-item input{flex:1;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:13px;}
+ button{padding:8px 16px;background:#1a73e8;color:white;border:none;border-radius:6px;cursor:pointer;}
+ button:hover{background:#1557b0;}
+ .result{margin-top:4px;padding:8px;background:#e8f0fe;border-radius:4px;font-size:13px;color:#1a73e8;display:none;}
+ .all-btn{margin:20px 0;padding:12px 24px;background:#ea4335;color:white;border:none;border-radius:6px;cursor:pointer;font-size:14px;}
+ .log{background:#fff;padding:15px;border-radius:8px;margin-top:20px;max-height:400px;overflow-y:auto;font-size:12px;color:#333;white-space:pre-wrap;border:1px solid #e0e0e0;}
+ .ok{color:#1a73e8;font-weight:600;}
+ .fail{color:#ea4335;}
 </style>
 </head>
 <body>
@@ -30,34 +30,34 @@
 const geocoder = new AMap.Geocoder({radius:1000,extensions:'all'});
 
 const addrs = [
-  "河南省郑州市郑东新区云溪北路以南，前程路以东、雁鸣路以西，云溪以北",
-  "河南省郑州市郑东新区龙湖北岸，龙湖内环北路与龙源西二街交叉口",
-  "河南省郑州市郑东新区白沙组团科学大道，西起前程路东至龙阳路",
-  "河南省济源市东二环东、苇泉河南、规划南环路北",
-  "河南省河南自贸试验区郑州片区白佛南路与潭南街交叉口东北侧",
-  "河南省郑州市郑东新区九如东路东、如意河东二街南",
-  "河南省郑州市郑东新区河南大学龙子湖校区，明理路379号",
-  "河南省郑州市郑东新区心怡路以东，康宁街以南",
-  "河南省平顶山市平宝大道与西环路交叉口西南角",
-  "河南省郑州市二七区马寨镇工业路8号",
-  "河南省新乡市红旗区东至鸿源街，西至规划路，北至纺织路，南至住宅项目A区用地北边界",
-  "河南省郑州市郑东新区龙湖中环北路南、龙源路东",
-  "河南省郑州航空港区黄海路以南、蓝莲路以北、生物科技四街以西、生物科技一街以东",
-  "河南省郑州市惠济区",
-  "河南省郑州航空港经济综合实验区豫州大道以西、皛店路以南",
-  "河南省郑州市郑东新区",
-  "河南省新乡市平原城乡一体化示范区云梦山路以东、长江大道以北、黄河路以南",
-  "河南省商丘市夏邑县",
-  "河南省郑州高新开发区枫杨街2号",
-  "河南省郑州市郑东新区金水东路南，后贾西街东",
-  "河南省许昌市建安区北外环与魏武路交叉口",
-  "河南省郑州高新区青梅街南、金柏路西",
-  "河南省洛阳市高新区孙旗屯",
-  "河南省洛阳市开元大道263号河南科技大学主校区",
-  "河南省安阳市林州市起点于龙山街道西街村G341与学院路交叉处",
-  "河南省郑州市中牟县大孟镇平安大道东1号",
-  "河南省洛阳市洛宁县",
-  "河南省鹤壁市淇滨区朝歌路5号",
+ "河南省郑州市郑东新区云溪北路以南，前程路以东、雁鸣路以西，云溪以北",
+ "河南省郑州市郑东新区龙湖北岸，龙湖内环北路与龙源西二街交叉口",
+ "河南省郑州市郑东新区白沙组团科学大道，西起前程路东至龙阳路",
+ "河南省济源市东二环东、苇泉河南、规划南环路北",
+ "河南省河南自贸试验区郑州片区白佛南路与潭南街交叉口东北侧",
+ "河南省郑州市郑东新区九如东路东、如意河东二街南",
+ "河南省郑州市郑东新区河南大学龙子湖校区，明理路379号",
+ "河南省郑州市郑东新区心怡路以东，康宁街以南",
+ "河南省平顶山市平宝大道与西环路交叉口西南角",
+ "河南省郑州市二七区马寨镇工业路8号",
+ "河南省新乡市红旗区东至鸿源街，西至规划路，北至纺织路，南至住宅项目A区用地北边界",
+ "河南省郑州市郑东新区龙湖中环北路南、龙源路东",
+ "河南省郑州航空港区黄海路以南、蓝莲路以北、生物科技四街以西、生物科技一街以东",
+ "河南省郑州市惠济区",
+ "河南省郑州航空港经济综合实验区豫州大道以西、皛店路以南",
+ "河南省郑州市郑东新区",
+ "河南省新乡市平原城乡一体化示范区云梦山路以东、长江大道以北、黄河路以南",
+ "河南省商丘市夏邑县",
+ "河南省郑州高新开发区枫杨街2号",
+ "河南省郑州市郑东新区金水东路南，后贾西街东",
+ "河南省许昌市建安区北外环与魏武路交叉口",
+ "河南省郑州高新区青梅街南、金柏路西",
+ "河南省洛阳市高新区孙旗屯",
+ "河南省洛阳市开元大道263号河南科技大学主校区",
+ "河南省安阳市林州市起点于龙山街道西街村G341与学院路交叉处",
+ "河南省郑州市中牟县大孟镇平安大道东1号",
+ "河南省洛阳市洛宁县",
+ "河南省鹤壁市淇滨区朝歌路5号",
 ];
 
 const names = ["项目1","项目2","项目3","项目4","项目5","项目6","项目7","项目8","项目9","项目10","项目11","项目12","项目13","项目14","项目15","项目16","项目17","项目18","项目19","项目20","项目21","项目22","项目23","项目24","项目25","项目26","项目27","项目28"];
@@ -67,47 +67,79 @@ let idx = 0;
 const log = document.getElementById('log');
 
 function updateLog(txt) {
-  log.textContent = txt;
-  log.scrollTop = log.scrollHeight;
+ log.textContent = txt;
+ log.scrollTop = log.scrollHeight;
 }
 
 function geocodeOne(name, addr, callback) {
-  geocoder.getLocation(addr, (status, result) => {
-    if (status === 'complete' && result.geocodes && result.geocodes.length > 0) {
-      const loc = result.geocodes[0].location;
-      results[name] = {lng: loc.lng, lat: loc.lat, addr: addr};
-      updateLog(log.textContent + `\n✅ ${name}: lng=${loc.lng}, lat=${loc.lat}`);
-      callback(true, {lng: loc.lng, lat: loc.lat});
-    } else {
-      results[name] = null;
-      updateLog(log.textContent + `\n❌ ${name}: 解析失败`);
-      callback(false, null);
-    }
-  });
+ let done = false;
+
+ // 超时保护：3秒没返回就跳过
+ const timer = setTimeout(() => {
+ if (!done) {
+ done = true;
+ results[name] = null;
+ updateLog(log.textContent + `\n⏰ ${name}: 解析超时，跳过`);
+ callback(false, null);
+ }
+ }, 3000);
+
+ geocoder.getLocation(addr, (status, result) => {
+ if (done) return;
+ done = true;
+ clearTimeout(timer);
+
+ // 兼容 v1/v2 状态码
+ const success = (status === 'complete' || status === '1')
+ && result
+ && result.geocodes
+ && result.geocodes.length > 0;
+
+ if (success) {
+ try {
+ const loc = result.geocodes[0].location;
+ results[name] = {lng: loc.lng, lat: loc.lat, addr: addr};
+ updateLog(log.textContent + `\n✅ ${name}: lng=${loc.lng}, lat=${loc.lat}`);
+ callback(true, {lng: loc.lng, lat: loc.lat});
+ } catch(e) {
+ results[name] = null;
+ updateLog(log.textContent + `\n❌ ${name}: 解析异常 (${e.message})`);
+ callback(false, null);
+ }
+ } else {
+ results[name] = null;
+ updateLog(log.textContent + `\n❌ ${name}: 解析失败 (status=${status})`);
+ callback(false, null);
+ }
+ });
 }
 
 function runAll() {
-  idx = 0;
-  updateLog('开始批量解析...\n');
-  runNext();
+ idx = 0;
+ updateLog('开始批量解析...\n');
+ runNext();
 }
 
 function runNext() {
-  if (idx >= addrs.length) {
-    updateLog(log.textContent + `\n\n========== 汇总 ==========\n`);
-    for (let i = 0; i < names.length; i++) {
-      const r = results[names[i]];
-      if (r) {
-        updateLog(log.textContent + `  ${names[i]}: lng=${r.lng}, lat=${r.lat}\n`);
-      }
-    }
-    return;
-  }
-  updateLog(log.textContent + `\n[${idx+1}/${addrs.length}] 正在解析: ${names[idx]}...`);
-  geocodeOne(names[idx], addrs[idx], () => {
-    idx++;
-    setTimeout(runNext, 500);
-  });
+ if (idx >= addrs.length) {
+ updateLog(log.textContent + `\n\n========== 汇总 ==========\n`);
+ for (let i = 0; i < names.length; i++) {
+ const r = results[names[i]];
+ if (r) {
+ updateLog(log.textContent + ` ${names[i]}: lng=${r.lng}, lat=${r.lat}\n`);
+ }
+ }
+Agent: main | Model: MiniMax-M2.5-highspeed | Provider: minimax
+main
+updateLog(log.textContent + \n========== 已全部完成 ==========);
+return;
+}
+updateLog(log.textContent + \n[${idx+1}/${addrs.length}] 正在解析: ${names[idx]}...);
+geocodeOne(names[idx], addrs[idx], () => {
+idx++;
+// 每个地址间隔500ms，避免并发过高
+setTimeout(runNext, 500);
+});
 }
 </script>
 </body>
