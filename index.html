@@ -72,43 +72,35 @@ function updateLog(txt) {
 }
 
 function geocodeOne(name, addr, callback) {
- let done = false;
-
- // 超时保护：3秒没返回就跳过
- const timer = setTimeout(() => {
+ var done = false;
+ var timer = setTimeout(function() {
  if (!done) {
  done = true;
  results[name] = null;
- updateLog(log.textContent + `\n⏰ ${name}: 解析超时，跳过`);
+ updateLog(log.textContent + "\n⏰ " + name + ": 解析超时，跳过");
  callback(false, null);
  }
  }, 3000);
 
- geocoder.getLocation(addr, (status, result) => {
+ geocoder.getLocation(addr, function(status, result) {
  if (done) return;
  done = true;
  clearTimeout(timer);
-
- // 兼容 v1/v2 状态码
- const success = (status === 'complete' || status === '1')
- && result
- && result.geocodes
- && result.geocodes.length > 0;
-
+ var success = (status === 'complete' || status === '1') && result && result.geocodes && result.geocodes.length > 0;
  if (success) {
  try {
- const loc = result.geocodes[0].location;
+ var loc = result.geocodes[0].location;
  results[name] = {lng: loc.lng, lat: loc.lat, addr: addr};
- updateLog(log.textContent + `\n✅ ${name}: lng=${loc.lng}, lat=${loc.lat}`);
+ updateLog(log.textContent + "\n✅ " + name + ": lng=" + loc.lng + ", lat=" + loc.lat);
  callback(true, {lng: loc.lng, lat: loc.lat});
  } catch(e) {
  results[name] = null;
- updateLog(log.textContent + `\n❌ ${name}: 解析异常 (${e.message})`);
+ updateLog(log.textContent + "\n❌ " + name + ": 解析异常 (" + e.message + ")");
  callback(false, null);
  }
  } else {
  results[name] = null;
- updateLog(log.textContent + `\n❌ ${name}: 解析失败 (status=${status})`);
+ updateLog(log.textContent + "\n❌ " + name + ": 解析失败 (status=" + status + ")");
  callback(false, null);
  }
  });
@@ -122,24 +114,22 @@ function runAll() {
 
 function runNext() {
  if (idx >= addrs.length) {
- updateLog(log.textContent + `\n\n========== 汇总 ==========\n`);
- for (let i = 0; i < names.length; i++) {
- const r = results[names[i]];
+ var summary = "\n\n========== 汇总 ==========\n";
+ for (var i = 0; i < names.length; i++) {
+ var r = results[names[i]];
  if (r) {
- updateLog(log.textContent + ` ${names[i]}: lng=${r.lng}, lat=${r.lat}\n`);
+ summary += " " + names[i] + ": lng=" + r.lng + ", lat=" + r.lat + "\n";
  }
  }
-Agent: main | Model: MiniMax-M2.5-highspeed | Provider: minimax
-main
-updateLog(log.textContent + \n========== 已全部完成 ==========);
-return;
-}
-updateLog(log.textContent + \n[${idx+1}/${addrs.length}] 正在解析: ${names[idx]}...);
-geocodeOne(names[idx], addrs[idx], () => {
-idx++;
-// 每个地址间隔500ms，避免并发过高
-setTimeout(runNext, 500);
-});
+ summary += "\n========== 已全部完成 ==========";
+ updateLog(log.textContent + summary);
+ return;
+ }
+ updateLog(log.textContent + "\n[" + (idx+1) + "/" + addrs.length + "] 正在解析: " + names[idx] + "...");
+ geocodeOne(names[idx], addrs[idx], function() {
+ idx++;
+ setTimeout(runNext, 500);
+ });
 }
 </script>
 </body>
