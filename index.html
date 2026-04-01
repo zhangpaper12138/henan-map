@@ -6,64 +6,72 @@
 <title>中原公司河南区域项目地图</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f0f2f5;}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#e8ecf0;overflow:hidden;}
 
-.wrap{display:flex;height:100vh;}
+/* 顶部横条 */
+.topbar{
+  height:72px;background:linear-gradient(135deg,#1a237e,#283593);
+  display:flex;align-items:center;padding:0 24px;gap:24px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.2);z-index:30;flex-shrink:0;
+}
+.topbar-title h1{font-size:18px;color:white;font-weight:600;}
+.topbar-title .sub{font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px;}
+.topbar-stats{display:flex;gap:0;margin-left:40px;}
+.topbar-stat{
+  text-align:center;padding:0 24px;border-right:1px solid rgba(255,255,255,0.2);
+}
+.topbar-stat:last-child{border-right:none;}
+.topbar-stat .num{font-size:26px;font-weight:700;color:#ffd54f;}
+.topbar-stat .unit{font-size:11px;color:rgba(255,255,255,0.8);margin-left:2px;}
+.topbar-stat .label{font-size:10px;color:rgba(255,255,255,0.6);margin-top:2px;}
 
-/* 左侧面板 */
-.sidebar{
-  width:270px;background:white;
+/* 主内容区 */
+.main{display:flex;height:calc(100vh - 72px);}
+
+/* 左侧项目列表 */
+.list-panel{
+  width:300px;background:white;
   display:flex;flex-direction:column;
-  box-shadow:2px 0 12px rgba(0,0,0,0.1);z-index:20;flex-shrink:0;overflow:hidden;
+  box-shadow:2px 0 8px rgba(0,0,0,0.08);z-index:20;flex-shrink:0;
 }
-.sidebar-header{
-  background:linear-gradient(135deg,#1a237e,#283593);padding:16px 18px;color:white;flex-shrink:0;
+.list-header{
+  padding:12px 16px;background:#f5f7ff;
+  border-bottom:1px solid #eee;flex-shrink:0;
 }
-.sidebar-header h2{font-size:15px;font-weight:600;}
-.sidebar-header .sub{font-size:11px;opacity:0.75;margin-top:3px;}
+.list-header .title{font-size:12px;font-weight:700;color:#333;}
+.list-header .count{font-size:10px;color:#999;margin-top:2px;}
 
-.stat-row{display:flex;padding:12px 16px;gap:8px;background:#f5f7ff;flex-shrink:0;}
-.stat-box{
-  flex:1;background:white;border-radius:8px;padding:10px 8px;
-  text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.06);
+.list-filters{
+  padding:10px 14px;border-bottom:1px solid #eee;flex-shrink:0;
 }
-.stat-box .num{font-size:20px;font-weight:700;color:#1a237e;}
-.stat-box .label{font-size:10px;color:#999;margin-top:2px;}
+.list-filters label{display:block;font-size:10px;font-weight:700;color:#aaa;margin-bottom:4px;letter-spacing:0.5px;}
+.list-filters select{
+  width:100%;padding:5px 8px;border:1px solid #e0e0e0;border-radius:6px;
+  font-size:12px;margin-bottom:6px;color:#333;background:white;
+}
+.list-filters select:focus{outline:none;border-color:#1a237e;}
 
-.filters-box{padding:10px 14px;border-bottom:1px solid #eee;flex-shrink:0;}
-.filters-box label{display:block;font-size:10px;font-weight:700;color:#999;margin-bottom:4px;letter-spacing:0.5px;}
-.filters-box select{
-  width:100%;padding:6px 8px;border:1px solid #e0e0e0;border-radius:6px;
-  font-size:12px;margin-bottom:8px;color:#333;
-}
-.filters-box select:focus{outline:none;border-color:#1a237e;}
-
-.proj-list{flex:1;overflow-y:auto;padding:8px 12px;}
-.proj-list-title{
-  font-size:10px;font-weight:700;color:#bbb;text-transform:uppercase;
-  letter-spacing:0.5px;padding:4px 4px 8px;position:sticky;top:0;background:#f0f2f5;
-}
-.proj-item{
-  background:white;border-radius:8px;padding:9px 11px;margin-bottom:5px;
+.list-scroll{flex:1;overflow-y:auto;padding:8px 12px;}
+.list-item{
+  background:#fafafa;border-radius:8px;padding:10px 12px;margin-bottom:6px;
   cursor:pointer;border-left:3px solid transparent;
-  transition:all 0.15s;box-shadow:0 1px 3px rgba(0,0,0,0.05);
+  transition:all 0.15s;box-shadow:0 1px 3px rgba(0,0,0,0.04);
 }
-.proj-item:hover{box-shadow:0 2px 8px rgba(0,0,0,0.12);transform:translateX(2px);}
-.proj-item.active{border-left-color:#1a237e;box-shadow:0 2px 8px rgba(26,35,126,0.15);}
-.proj-item .name{font-size:12px;font-weight:600;color:#333;margin-bottom:3px;line-height:1.3;}
-.proj-item .meta{font-size:10px;color:#aaa;display:flex;gap:6px;flex-wrap:wrap;}
-.proj-item .status-tag{
-  display:inline-block;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:600;
-  margin-left:4px;
+.list-item:hover{background:#f0f4ff;box-shadow:0 2px 8px rgba(26,35,126,0.1);transform:translateX(2px);}
+.list-item.active{border-left-color:#1a237e;background:#eef0ff;}
+.list-item .proj-name{font-size:13px;font-weight:600;color:#222;margin-bottom:5px;line-height:1.3;}
+.list-item .proj-meta{font-size:11px;color:#888;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.list-item .status-badge{
+  display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600;
 }
-.proj-item .status-tag.zaijian{background:#e3f2fd;color:#1565c0;}
-.proj-item .status-tag.tinghuan{background:#fce4ec;color:#c62828;}
+.list-item .status-badge.zaijian{background:#ddeeff;color:#1565c0;}
+.list-item .status-badge.tinghuan{background:#ffddde;color:#c62828;}
 
 /* 地图区域 */
-.main{flex:1;position:relative;overflow:hidden;}
+.map-panel{flex:1;position:relative;overflow:hidden;}
 #amap{width:100%;height:100%;}
 
-/* 加载提示 */
+/* 加载 */
 .map-loading{
   position:absolute;top:0;left:0;width:100%;height:100%;
   background:rgba(255,255,255,0.95);display:flex;flex-direction:column;
@@ -73,11 +81,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .map-loading .txt{font-size:13px;color:#666;margin-top:10px;}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-/* 详情弹窗 - 跟随marker */
+/* 详情卡片 */
 .info-card{
   display:none;position:absolute;z-index:300;
   background:white;border-radius:12px;
-  box-shadow:0 6px 30px rgba(0,0,0,0.2);
+  box-shadow:0 8px 32px rgba(0,0,0,0.2);
   width:290px;overflow:hidden;
   font-family:'PingFang SC','Microsoft YaHei',sans-serif;
 }
@@ -87,12 +95,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
   color:white;position:relative;
 }
 .info-card-hd h3{font-size:13px;font-weight:600;padding-right:28px;line-height:1.35;}
-.info-card-hd .status-badge{
-  display:inline-block;padding:2px 8px;border-radius:10px;
-  font-size:10px;font-weight:600;margin-top:4px;
-}
-.info-card-hd .status-badge.zaijian{background:#ffd54f;color:#1a237e;}
-.info-card-hd .status-badge.tinghuan{background:#ef5350;color:white;}
 .info-card-close{
   position:absolute;top:10px;right:10px;
   background:rgba(255,255,255,0.25);border:none;color:white;
@@ -102,84 +104,92 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .info-card-bd{padding:12px 14px;}
 .info-row{
   display:flex;justify-content:space-between;align-items:flex-start;
-  padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:12px;
+  padding:7px 0;border-bottom:1px solid #f0f0f0;font-size:12px;
 }
 .info-row:last-child{border-bottom:none;}
 .info-row .lb{color:#aaa;font-weight:500;flex-shrink:0;}
-.info-row .vl{color:#222;font-weight:600;text-align:right;max-width:165px;word-break:break-all;font-size:12px;}
+.info-row .vl{color:#222;font-weight:600;text-align:right;max-width:165px;word-break:break-all;}
 .info-row .vl.big{font-size:16px;color:#1a237e;}
 .info-row .vl.addr{font-size:11px;color:#666;line-height:1.4;}
+.info-row .status-badge{
+  display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;
+}
+.info-row .status-badge.zaijian{background:#ddeeff;color:#1565c0;}
+.info-row .status-badge.tinghuan{background:#ffddde;color:#c62828;}
 
 /* 图例 */
 .map-legend{
-  position:absolute;left:16px;bottom:30px;
+  position:absolute;left:16px;bottom:24px;
   background:white;padding:10px 14px;border-radius:10px;
   box-shadow:0 2px 12px rgba(0,0,0,0.12);z-index:10;
 }
-.map-legend-tl{font-size:10px;font-weight:700;color:#999;margin-bottom:8px;}
+.map-legend-tl{font-size:10px;font-weight:700;color:#999;margin-bottom:6px;}
 .legend-it{display:flex;align-items:center;gap:7px;padding:2px 0;font-size:11px;color:#555;}
 .legend-dot{width:10px;height:10px;border-radius:50%;}
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <!-- 左侧面板 -->
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <h2>🗺️ 中原公司</h2>
-      <div class="sub">河南区域项目分布图</div>
-      <div class="sub">2026年4月 · 共28个项目</div>
+<!-- 顶部横条 -->
+<div class="topbar">
+  <div class="topbar-title">
+    <h1>🗺️ 中原公司河南区域项目地图</h1>
+    <div class="sub">2026年4月 · 共28个项目</div>
+  </div>
+  <div class="topbar-stats">
+    <div class="topbar-stat">
+      <div><span class="num" id="statCount">28</span><span class="unit">个</span></div>
+      <div class="label">项目数量</div>
     </div>
-    
-    <div class="stat-row">
-      <div class="stat-box">
-        <div class="num" id="statCount">28</div>
-        <div class="label">项目数量</div>
-      </div>
-      <div class="stat-box">
-        <div class="num" id="statAmount">164.6</div>
-        <div class="label">合同总额(亿)</div>
-      </div>
-      <div class="stat-box">
-        <div class="num" id="statArea">371.5</div>
-        <div class="label">总面积(万㎡)</div>
-      </div>
+    <div class="topbar-stat">
+      <div><span class="num" id="statAmount">164.6</span><span class="unit">亿</span></div>
+      <div class="label">合同总额</div>
     </div>
-    
-    <div class="filters-box">
-      <label>城市筛选</label>
+    <div class="topbar-stat">
+      <div><span class="num" id="statArea">371.5</span><span class="unit">万㎡</span></div>
+      <div class="label">总面积</div>
+    </div>
+  </div>
+</div>
+
+<!-- 主内容 -->
+<div class="main">
+  <!-- 左侧项目列表 -->
+  <div class="list-panel">
+    <div class="list-header">
+      <div class="title">📋 项目列表</div>
+      <div class="count">点击项目查看地图位置</div>
+    </div>
+    <div class="list-filters">
+      <label>城市</label>
       <select id="citySel" onchange="doFilter()">
         <option value="all">全部城市</option>
       </select>
-      <label>项目状态</label>
+      <label>状态</label>
       <select id="stageSel" onchange="doFilter()">
         <option value="all">全部状态</option>
         <option value="zaijian">在建</option>
         <option value="tinghuan">停缓建</option>
       </select>
     </div>
-    
-    <div class="proj-list">
-      <div class="proj-list-title">项目列表（点击地图或列表查看详情）</div>
-      <div id="projListContent"></div>
+    <div class="list-scroll" id="listScroll">
+      <div id="listContent"></div>
     </div>
   </div>
   
   <!-- 地图 -->
-  <div class="main">
+  <div class="map-panel">
     <div class="map-loading" id="mapLoading">
       <div class="icon">⏳</div>
       <div class="txt">地图加载中，请稍候...</div>
     </div>
     <div id="amap"></div>
     
-    <!-- 详情弹窗（跟随marker） -->
+    <!-- 详情卡片 -->
     <div class="info-card" id="infoCard">
       <div class="info-card-hd">
         <button class="info-card-close" onclick="closeCard()">×</button>
         <h3 id="cardName">项目名称</h3>
-        <span class="status-badge" id="cardBadge">在建</span>
       </div>
       <div class="info-card-bd" id="cardBody"></div>
     </div>
@@ -200,60 +210,49 @@ const projects = [{"seq": 1, "name": "郑东新区科学谷数字小镇建设项
 let map, markers = [];
 let cardMarker = null;
 
-// 判断项目状态
-function getProjectStatus(p) {
-  // 通过阶段描述判断
-  const stage = p.stage || '';
-  if (stage.includes('停缓建') || stage.includes('暂停') || p.seq === 25) {
-    return 'tinghuan';
-  }
+function getStatus(p) {
+  if (p.stage && p.stage.includes('停缓建')) return 'tinghuan';
   return 'zaijian';
 }
-
-// 状态颜色
-function getStatusColor(p) {
-  return getProjectStatus(p) === 'tinghuan' ? '#c62828' : '#1565c0';
-}
-
-// 状态文字
-function getStatusText(p) {
-  return getProjectStatus(p) === 'tinghuan' ? '停缓建' : '在建';
-}
-
-// 格式化数字
+function getColor(p) { return getStatus(p) === 'tinghuan' ? '#c62828' : '#1565c0'; }
+function getStatusText(p) { return getStatus(p) === 'tinghuan' ? '停缓建' : '在建'; }
 function fA(v) { return typeof v === 'number' ? v.toFixed(1) : (v === 'N/A' ? '-' : v); }
 function fA2(v) { return typeof v === 'number' ? v.toFixed(2) : (v === 'N/A' ? '-' : v); }
 
-// 详情卡片
-function showCard(p, lngLat) {
+function showCard(p, pixel) {
   const card = document.getElementById('infoCard');
-  const status = getProjectStatus(p);
+  const status = getStatus(p);
   const statusText = getStatusText(p);
   
   document.getElementById('cardName').textContent = p.name;
-  const badge = document.getElementById('cardBadge');
-  badge.textContent = statusText;
-  badge.className = 'status-badge ' + status;
-  
   document.getElementById('cardBody').innerHTML = `
     <div class="info-row">
-      <span class="lb">城市</span><span class="vl">${p.city}</span>
+      <span class="lb">城市</span>
+      <span class="vl">${p.city}</span>
     </div>
     <div class="info-row">
-      <span class="lb">合同额</span><span class="vl big">${fA(p.amount)} 亿元</span>
+      <span class="lb">状态</span>
+      <span class="status-badge ${status}">${statusText}</span>
     </div>
     <div class="info-row">
-      <span class="lb">建筑面积</span><span class="vl">${fA2(p.area)} 万㎡</span>
+      <span class="lb">合同额</span>
+      <span class="vl big">${fA(p.amount)} 亿元</span>
+    </div>
+    <div class="info-row">
+      <span class="lb">建筑面积</span>
+      <span class="vl">${fA2(p.area)} 万㎡</span>
     </div>
     <div class="info-row" style="flex-direction:column;gap:3px;">
       <span class="lb">建设单位</span>
       <span class="vl" style="max-width:100%;font-size:11px;color:#555;">${p.owner}</span>
     </div>
     <div class="info-row">
-      <span class="lb">业态类型</span><span class="vl">${p.business}</span>
+      <span class="lb">业态类型</span>
+      <span class="vl">${p.business}</span>
     </div>
     <div class="info-row">
-      <span class="lb">当前阶段</span><span class="vl">${p.stage}</span>
+      <span class="lb">当前阶段</span>
+      <span class="vl">${p.stage}</span>
     </div>
     <div class="info-row" style="flex-direction:column;gap:3px;">
       <span class="lb">详细地址</span>
@@ -261,26 +260,21 @@ function showCard(p, lngLat) {
     </div>
   `;
   
-  // 计算弹窗位置（在marker旁边）
-  const mapRect = document.getElementById('amap').getBoundingClientRect();
-  const pixel = map.lngLatToContainer([lngLat.lng, lngLat.lat]);
+  const mapEl = document.getElementById('amap');
+  const rect = mapEl.getBoundingClientRect();
   let left = pixel.x + 15;
-  let top = pixel.y - 80;
-  if (left + 300 > mapRect.width) left = pixel.x - 305;
+  let top = pixel.y - 100;
+  if (left + 300 > rect.width) left = Math.max(10, pixel.x - 305);
   if (top < 10) top = pixel.y + 15;
-  if (top + 350 > mapRect.height) top = mapRect.height - 360;
+  if (top + 380 > rect.height) top = rect.height - 390;
   
   card.style.left = left + 'px';
   card.style.top = top + 'px';
   card.style.right = 'auto';
   card.classList.add('show');
   
-  // 高亮对应列表项
-  document.querySelectorAll('.proj-item').forEach(el => {
+  document.querySelectorAll('.list-item').forEach(el => {
     el.classList.toggle('active', parseInt(el.dataset.seq) === p.seq);
-    if (parseInt(el.dataset.seq) === p.seq) {
-      el.scrollIntoView({block:'nearest',behavior:'smooth'});
-    }
   });
 }
 
@@ -293,11 +287,10 @@ function doFilter() {
   const city = document.getElementById('citySel').value;
   const stage = document.getElementById('stageSel').value;
   
-  let filtered = projects.filter(p => {
+  const filtered = projects.filter(p => {
     if (!p.lat) return false;
     if (city !== 'all' && p.city !== city) return false;
-    const ps = getProjectStatus(p);
-    if (stage !== 'all' && ps !== stage) return false;
+    if (stage !== 'all' && getStatus(p) !== stage) return false;
     return true;
   });
   
@@ -321,63 +314,60 @@ function renderMarkers(ps) {
   
   ps.forEach(p => {
     if (!p.lat || !p.lon) return;
-    const color = getStatusColor(p);
-    const status = getProjectStatus(p);
-    
     const marker = new AMap.CircleMarker({
       map: map,
       center: [p.lon, p.lat],
       radius: 9,
-      fillColor: color,
+      fillColor: getColor(p),
       strokeColor: 'white',
       strokeWeight: 2.5,
-      extData: { seq: p.seq, status: status }
+      extData: { seq: p.seq }
     });
-    
     marker.on('click', (e) => {
       if (cardMarker) cardMarker.setRadius(9);
       marker.setRadius(13);
       cardMarker = marker;
-      showCard(p, e.lnglat);
+      const pixel = map.lngLatToContainer([p.lon, p.lat]);
+      showCard(p, pixel);
     });
-    
     markers.push(marker);
   });
 }
 
 function renderList(ps) {
-  document.getElementById('projListContent').innerHTML = ps.map(p => {
-    const status = getProjectStatus(p);
+  document.getElementById('listContent').innerHTML = ps.map(p => {
+    const status = getStatus(p);
     const statusText = getStatusText(p);
-    return `<div class="proj-item" data-seq="${p.seq}" onclick="showProject(${p.seq})">
-      <div class="name">
-        ${p.name.length > 22 ? p.name.slice(0,22) + '...' : p.name}
-        <span class="status-tag ${status}">${statusText}</span>
+    return `<div class="list-item" data-seq="${p.seq}" onclick="showProject(${p.seq})">
+      <div class="proj-name">
+        ${p.name.length > 26 ? p.name.slice(0,26) + '...' : p.name}
+        <span class="status-badge ${status}">${statusText}</span>
       </div>
-      <div class="meta">
+      <div class="proj-meta">
         <span>📍 ${p.city}</span>
         <span>💰 ${fA(p.amount)}亿</span>
+        <span>🏗️ ${p.business}</span>
       </div>
     </div>`;
   }).join('');
 }
 
-// 点击列表项
 function showProject(seq) {
   const p = projects.find(x => x.seq === seq);
   if (!p || !p.lat) return;
-  
   const m = markers.find(m => parseInt(m.getExtData().seq) === seq);
   if (m) {
     if (cardMarker) cardMarker.setRadius(9);
     m.setRadius(13);
     cardMarker = m;
     map.setCenter([p.lon, p.lat]);
-    showCard(p, {lng: p.lon, lat: p.lat});
+    const pixel = map.lngLatToContainer([p.lon, p.lat]);
+    showCard(p, pixel);
+    const el = document.querySelector(`[data-seq="${seq}"]`);
+    if (el) el.scrollIntoView({block:'nearest',behavior:'smooth'});
   }
 }
 
-// 初始化筛选
 function initFilters() {
   const cs = [...new Set(projects.map(p => p.city))].filter(Boolean).sort();
   cs.forEach(c => {
@@ -386,25 +376,19 @@ function initFilters() {
   });
 }
 
-// 初始化地图
 function initMap() {
   map = new AMap.Map('amap', {
-    zoom: 7,
-    center: [113.5, 34.2],
+    zoom: 7, center: [113.5, 34.2],
     mapStyle: 'amap://styles/normal',
-    viewMode: '2D',
-    showIndoorMap: false,
+    viewMode: '2D', showIndoorMap: false,
   });
   
   map.on('complete', () => {
     document.getElementById('mapLoading').style.display = 'none';
     document.querySelectorAll('.amap-logo, .amap-copyright').forEach(el => el.style.display = 'none');
-    
     initFilters();
     renderMarkers(projects);
     renderList(projects);
-    
-    // 初始统计
     let tA = 0, tB = 0;
     projects.forEach(p => {
       if (typeof p.amount === 'number') tA += p.amount;
